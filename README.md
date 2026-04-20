@@ -2,6 +2,8 @@
 
 Buzz.ai is a location-based local commerce platform. It helps neighborhood shops create digital storefronts, helps customers discover nearby stores by city, and lets them place orders from local inventory through a single marketplace experience.
 
+![Buzz.ai marketplace screenshot](docs/images/buzz-ai-home.png)
+
 This repository contains the complete MVP codebase:
 
 - `frontend/`: customer and shopkeeper web app built with React, Vite, and Tailwind CSS
