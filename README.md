@@ -7,6 +7,7 @@ This repository contains the complete MVP codebase:
 - `frontend/`: customer and shopkeeper web app built with React, Vite, and Tailwind CSS
 - `backend/`: REST API built with Node.js and Express
 - `backend/data/db.json`: local JSON fallback datastore for development when MongoDB is not available
+- `backend/scripts/import-bhilai-shops.mjs`: importer for Bhilai shop discovery from OpenStreetMap
 
 ## What The Company Does
 
@@ -88,6 +89,33 @@ The following are not implemented yet:
 - admin panel
 - advanced AI recommendations
 - production-grade notifications
+
+## Real Shop Import
+
+This repo now includes a local importer for Bhilai merchants using OpenStreetMap data.
+
+What it does:
+
+- resolves Bhilai from Nominatim
+- queries Overpass API mirrors for mapped shops and selected amenities
+- imports discovered merchants into `backend/data/db.json`
+- creates placeholder starter products so imported shops are visible and orderable in the UI
+
+Run it with:
+
+```bash
+npm run import:bhilai --workspace backend -- 1000
+```
+
+Current note:
+
+- in the current local run, the importer pulled 32 mapped Bhilai shops and generated 96 seed products
+- this number depends on what is available in OpenStreetMap and which mirrors respond successfully
+
+Important business reality:
+
+- getting to 1000 high-quality merchants will usually require verified merchant onboarding or a commercial places data source
+- open map data is useful for discovery, bootstrapping, and demos, but not enough by itself for a production merchant network
 
 ## Tech Stack
 
@@ -198,7 +226,13 @@ npm run dev:backend
 npm run dev:frontend
 ```
 
-5. Open:
+5. Optionally import Bhilai shops into the local JSON datastore:
+
+```bash
+npm run import:bhilai --workspace backend -- 1000
+```
+
+6. Open:
 
 ```text
 http://localhost:5173
@@ -280,3 +314,4 @@ After MVP, the strongest next steps are:
 - Product images are stored in `backend/uploads` locally.
 - The current repository is structured for fast MVP iteration, not enterprise-scale infra yet.
 - If you want, the next step should be deployment setup, not more random features.
+- Shop discovery data imported through the script comes from OpenStreetMap contributors under ODbL. Validate and verify merchants before production use.

@@ -1,6 +1,26 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 const UPLOADS_BASE_URL = (import.meta.env.VITE_SERVER_URL || "http://localhost:5000").replace(/\/$/, "");
 
+const normalizeEntity = (value) => {
+  if (Array.isArray(value)) {
+    return value.map(normalizeEntity);
+  }
+
+  if (!value || typeof value !== "object") {
+    return value;
+  }
+
+  const normalized = Object.fromEntries(
+    Object.entries(value).map(([key, nested]) => [key, normalizeEntity(nested)])
+  );
+
+  if (!normalized.id && normalized._id) {
+    normalized.id = normalized._id;
+  }
+
+  return normalized;
+};
+
 const request = async (path, options = {}) => {
   const response = await fetch(`${API_BASE_URL}${path}`, options);
   const data = await response.json();
@@ -9,7 +29,7 @@ const request = async (path, options = {}) => {
     throw new Error(data.message || "Request failed.");
   }
 
-  return data;
+  return normalizeEntity(data);
 };
 
 export const api = {
@@ -95,4 +115,3 @@ export const api = {
     });
   }
 };
-

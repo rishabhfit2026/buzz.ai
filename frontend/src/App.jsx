@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { api } from "./lib/api";
 
 const cities = ["Bhilai", "Raipur", "Durg", "Bilaspur", "Nagpur"];
-const categories = ["Grocery", "Restaurant", "PG", "Bakery", "Pharmacy", "Stationery"];
+const categories = ["All", "Grocery", "Restaurant", "Pharmacy", "Bakery", "PG", "Electronics"];
 
 const initialAuthForm = {
   name: "",
@@ -14,14 +14,33 @@ const initialAuthForm = {
   city: "Bhilai"
 };
 
+const initialShopForm = {
+  name: "",
+  category: "Grocery",
+  description: "",
+  state: "Chhattisgarh",
+  city: "Bhilai"
+};
+
+const initialProductForm = {
+  shopId: "",
+  name: "",
+  price: "",
+  description: "",
+  stock: "100",
+  image: null
+};
+
 export default function App() {
   const [mode, setMode] = useState("login");
   const [authForm, setAuthForm] = useState(initialAuthForm);
   const [authState, setAuthState] = useState(() => {
-    const raw = localStorage.getItem("buzz-auth");
+    const raw = window.localStorage.getItem("buzz-auth");
     return raw ? JSON.parse(raw) : { token: "", user: null };
   });
   const [selectedCity, setSelectedCity] = useState("Bhilai");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
   const [shops, setShops] = useState([]);
   const [selectedShop, setSelectedShop] = useState(null);
   const [products, setProducts] = useState([]);
@@ -29,26 +48,14 @@ export default function App() {
   const [orders, setOrders] = useState([]);
   const [feedback, setFeedback] = useState("");
   const [loading, setLoading] = useState(false);
-  const [shopForm, setShopForm] = useState({
-    name: "",
-    category: "Grocery",
-    description: "",
-    state: "Chhattisgarh",
-    city: "Bhilai"
-  });
-  const [productForm, setProductForm] = useState({
-    shopId: "",
-    name: "",
-    price: "",
-    description: "",
-    stock: "100",
-    image: null
-  });
+  const [shopForm, setShopForm] = useState(initialShopForm);
+  const [productForm, setProductForm] = useState(initialProductForm);
   const [myShops, setMyShops] = useState([]);
 
   const currentUser = authState.user;
   const isAuthenticated = Boolean(authState.token && currentUser);
   const isShopkeeper = currentUser?.role === "shopkeeper";
+  const isCustomer = currentUser?.role === "customer";
 
   useEffect(() => {
     window.localStorage.setItem("buzz-auth", JSON.stringify(authState));
@@ -59,25 +66,40 @@ export default function App() {
   }, [selectedCity]);
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      return;
+    if (isAuthenticated) {
+      loadOrders();
+      if (isShopkeeper) {
+        loadMyShops();
+      }
     }
+  }, [isAuthenticated, isShopkeeper]);
 
-    loadOrders();
-    if (isShopkeeper) {
-      loadMyShops();
-    }
-  }, [isAuthenticated]);
+  const filteredShops = useMemo(() => {
+    return shops.filter((shop) => {
+      const matchesCategory =
+        selectedCategory === "All" ||
+        String(shop.category || "").toLowerCase() === selectedCategory.toLowerCase();
+      const needle = searchQuery.trim().toLowerCase();
+      const haystack = `${shop.name} ${shop.category} ${shop.description || ""}`.toLowerCase();
+      return matchesCategory && (!needle || haystack.includes(needle));
+    });
+  }, [shops, selectedCategory, searchQuery]);
 
+  const featuredShops = filteredShops.slice(0, 6);
+  const featuredProducts = products.slice(0, 8);
   const cartTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   const loadMarketplace = async (city) => {
     try {
       const data = await api.getShops(city);
       setShops(data);
-      if (selectedShop && !data.some((shop) => shop._id === selectedShop._id)) {
-        setSelectedShop(null);
-        setProducts([]);
+
+      if (selectedShop) {
+        const nextSelectedShop = data.find((shop) => shop.id === selectedShop.id) || null;
+        setSelectedShop(nextSelectedShop);
+        if (!nextSelectedShop) {
+          setProducts([]);
+        }
       }
     } catch (error) {
       setFeedback(error.message);
@@ -87,7 +109,7 @@ export default function App() {
   const loadProducts = async (shop) => {
     try {
       setSelectedShop(shop);
-      const data = await api.getProducts(shop._id);
+      const data = await api.getProducts(shop.id);
       setProducts(data);
     } catch (error) {
       setFeedback(error.message);
@@ -99,7 +121,7 @@ export default function App() {
       const data = await api.getMyShops(authState.token);
       setMyShops(data);
       if (data.length && !productForm.shopId) {
-        setProductForm((prev) => ({ ...prev, shopId: data[0]._id }));
+        setProductForm((current) => ({ ...current, shopId: data[0].id }));
       }
     } catch (error) {
       setFeedback(error.message);
@@ -128,7 +150,7 @@ export default function App() {
 
       setAuthState(data);
       setSelectedCity(data.user?.location?.city || "Bhilai");
-      setFeedback(`Welcome, ${data.user.name}.`);
+      setFeedback(`Welcome back, ${data.user.name}.`);
     } catch (error) {
       setFeedback(error.message);
     } finally {
@@ -143,16 +165,10 @@ export default function App() {
 
     try {
       await api.createShop(shopForm, authState.token);
-      setShopForm({
-        name: "",
-        category: "Grocery",
-        description: "",
-        state: "Chhattisgarh",
-        city: selectedCity
-      });
+      setShopForm({ ...initialShopForm, city: selectedCity });
       await loadMyShops();
       await loadMarketplace(selectedCity);
-      setFeedback("Shop created.");
+      setFeedback("Shop launched successfully.");
     } catch (error) {
       setFeedback(error.message);
     } finally {
@@ -174,18 +190,20 @@ export default function App() {
       });
 
       await api.createProduct(formData, authState.token);
-      setProductForm((prev) => ({
-        ...prev,
+      setProductForm((current) => ({
+        ...current,
         name: "",
         price: "",
         description: "",
         stock: "100",
         image: null
       }));
-      if (selectedShop && selectedShop._id === productForm.shopId) {
+
+      if (selectedShop && selectedShop.id === productForm.shopId) {
         await loadProducts(selectedShop);
       }
-      setFeedback("Product added.");
+
+      setFeedback("Product added to your catalog.");
     } catch (error) {
       setFeedback(error.message);
     } finally {
@@ -194,18 +212,18 @@ export default function App() {
   };
 
   const addToCart = (product) => {
-    setCart((prev) => {
-      const existing = prev.find((item) => item.productId === product._id);
+    setCart((current) => {
+      const existing = current.find((item) => item.productId === product.id);
       if (existing) {
-        return prev.map((item) =>
-          item.productId === product._id ? { ...item, quantity: item.quantity + 1 } : item
+        return current.map((item) =>
+          item.productId === product.id ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
 
       return [
-        ...prev,
+        ...current,
         {
-          productId: product._id,
+          productId: product.id,
           name: product.name,
           price: product.price,
           quantity: 1
@@ -216,7 +234,7 @@ export default function App() {
 
   const placeOrder = async () => {
     if (!selectedShop || cart.length === 0) {
-      setFeedback("Select a shop and add products to cart first.");
+      setFeedback("Select a shop and add products to the cart first.");
       return;
     }
 
@@ -226,7 +244,7 @@ export default function App() {
     try {
       await api.placeOrder(
         {
-          shopId: selectedShop._id,
+          shopId: selectedShop.id,
           deliveryCity: selectedCity,
           items: cart
         },
@@ -234,7 +252,7 @@ export default function App() {
       );
       setCart([]);
       await loadOrders();
-      setFeedback("Order placed.");
+      setFeedback("Order placed successfully.");
     } catch (error) {
       setFeedback(error.message);
     } finally {
@@ -247,7 +265,7 @@ export default function App() {
     try {
       await api.updateOrderStatus(orderId, status, authState.token);
       await loadOrders();
-      setFeedback(`Order marked as ${status}.`);
+      setFeedback(`Order updated to ${status}.`);
     } catch (error) {
       setFeedback(error.message);
     } finally {
@@ -266,51 +284,31 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen px-4 py-6 md:px-8">
-      <div className="mx-auto max-w-7xl space-y-6">
-        <header className="panel overflow-hidden p-6 md:p-8">
-          <div className="grid gap-6 md:grid-cols-[1.2fr_0.8fr] md:items-end">
-            <div className="space-y-5">
-              <span className="chip">AI-powered local marketplace</span>
-              <div className="space-y-3">
-                <h1 className="font-display text-5xl leading-none text-sand md:text-7xl">
-                  Buzz.ai
-                </h1>
-                <p className="max-w-2xl text-sm leading-6 text-sand/75 md:text-base">
-                  Build one city first. Shopkeepers launch mini stores, customers discover nearby
-                  inventory, and orders move through a simple local commerce workflow.
-                </p>
-              </div>
-            </div>
+    <div className="min-h-screen bg-aura">
+      <div className="mx-auto max-w-7xl px-4 py-5 md:px-8">
+        <TopBar
+          currentUser={currentUser}
+          logout={logout}
+          searchQuery={searchQuery}
+          selectedCity={selectedCity}
+          setSearchQuery={setSearchQuery}
+        />
 
-            <div className="panel bg-black/10 p-5">
-              <p className="text-xs uppercase tracking-[0.2em] text-sand/50">Live scope</p>
-              <div className="mt-4 grid gap-3 text-sm text-sand/80">
-                <div className="flex items-center justify-between rounded-2xl bg-white/5 px-4 py-3">
-                  <span>City filter</span>
-                  <strong>{selectedCity}</strong>
-                </div>
-                <div className="flex items-center justify-between rounded-2xl bg-white/5 px-4 py-3">
-                  <span>Shops visible</span>
-                  <strong>{shops.length}</strong>
-                </div>
-                <div className="flex items-center justify-between rounded-2xl bg-white/5 px-4 py-3">
-                  <span>Cart total</span>
-                  <strong>Rs. {cartTotal}</strong>
-                </div>
-              </div>
-            </div>
-          </div>
-        </header>
+        <HeroPanel
+          cartTotal={cartTotal}
+          selectedCity={selectedCity}
+          setSelectedCategory={setSelectedCategory}
+          shopsCount={filteredShops.length}
+        />
 
         {feedback ? (
-          <div className="rounded-2xl border border-coral/30 bg-coral/10 px-4 py-3 text-sm text-sand">
+          <div className="mt-5 rounded-2xl border border-coral/30 bg-coral/10 px-4 py-3 text-sm text-sand">
             {feedback}
           </div>
         ) : null}
 
-        <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
-          <section className="space-y-6">
+        <div className="mt-6 grid gap-6 xl:grid-cols-[1.6fr_0.9fr]">
+          <main className="space-y-6">
             {!isAuthenticated ? (
               <AuthCard
                 authForm={authForm}
@@ -321,16 +319,44 @@ export default function App() {
                 setMode={setMode}
               />
             ) : (
-              <ProfileCard user={currentUser} onLogout={logout} />
+              <AccountStrip currentUser={currentUser} />
             )}
 
-            <LocationCard selectedCity={selectedCity} setSelectedCity={setSelectedCity} />
+            <MarketplaceControls
+              selectedCategory={selectedCategory}
+              selectedCity={selectedCity}
+              setSelectedCategory={setSelectedCategory}
+              setSelectedCity={setSelectedCity}
+            />
 
-            {isAuthenticated && currentUser.role === "customer" ? (
-              <CartCard cart={cart} cartTotal={cartTotal} placeOrder={placeOrder} />
+            <ShopsGrid featuredShops={featuredShops} loadProducts={loadProducts} selectedShop={selectedShop} />
+
+            {selectedShop ? (
+              <ProductsSection
+                addToCart={addToCart}
+                products={featuredProducts}
+                selectedShop={selectedShop}
+                user={currentUser}
+              />
+            ) : (
+              <EmptySelection />
+            )}
+
+            {isAuthenticated ? (
+              <OrdersSection
+                isShopkeeper={isShopkeeper}
+                orders={orders}
+                updateOrderStatus={updateOrderStatus}
+              />
+            ) : null}
+          </main>
+
+          <aside className="space-y-6">
+            {isCustomer ? (
+              <CartCard cart={cart} cartTotal={cartTotal} loading={loading} placeOrder={placeOrder} />
             ) : null}
 
-            {isAuthenticated && isShopkeeper ? (
+            {isShopkeeper ? (
               <>
                 <ShopFormCard
                   loading={loading}
@@ -347,47 +373,103 @@ export default function App() {
                 />
               </>
             ) : null}
-          </section>
 
-          <section className="space-y-6">
-            <MarketplaceCard
-              loadProducts={loadProducts}
-              selectedCity={selectedCity}
-              selectedShop={selectedShop}
-              shops={shops}
-            />
-
-            {selectedShop ? (
-              <ProductsCard
-                addToCart={addToCart}
-                products={products}
-                selectedShop={selectedShop}
-                user={currentUser}
-              />
-            ) : null}
-
-            {isAuthenticated ? (
-              <OrdersCard
-                isShopkeeper={isShopkeeper}
-                orders={orders}
-                updateOrderStatus={updateOrderStatus}
-              />
-            ) : null}
-          </section>
+            <GrowthIdeas />
+          </aside>
         </div>
       </div>
     </div>
   );
 }
 
+function TopBar({ currentUser, selectedCity, searchQuery, setSearchQuery, logout }) {
+  return (
+    <div className="panel flex flex-col gap-4 px-5 py-4 md:flex-row md:items-center md:justify-between">
+      <div className="flex items-center gap-4">
+        <div>
+          <div className="text-xs uppercase tracking-[0.25em] text-sand/45">Buzz.ai</div>
+          <div className="font-display text-4xl leading-none text-sand">market</div>
+        </div>
+        <div className="hidden h-10 w-px bg-white/10 md:block" />
+        <div className="hidden md:block">
+          <div className="text-xs uppercase tracking-[0.25em] text-sand/45">Serving</div>
+          <div className="text-sm text-sand/75">{selectedCity}, local commerce network</div>
+        </div>
+      </div>
+
+      <div className="flex flex-1 items-center gap-3 md:max-w-xl">
+        <input
+          className="field"
+          placeholder="Search shops, products, categories"
+          value={searchQuery}
+          onChange={(event) => setSearchQuery(event.target.value)}
+        />
+        {currentUser ? (
+          <button className="button-secondary whitespace-nowrap" onClick={logout} type="button">
+            Logout
+          </button>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function HeroPanel({ selectedCity, shopsCount, cartTotal, setSelectedCategory }) {
+  return (
+    <section className="mt-6 grid gap-6 lg:grid-cols-[1.35fr_0.85fr]">
+      <div className="panel overflow-hidden p-7 md:p-10">
+        <div className="flex flex-wrap gap-2">
+          <span className="chip">Hyperlocal commerce</span>
+          <span className="chip">Bhilai-first rollout</span>
+          <span className="chip">Merchant marketplace</span>
+        </div>
+        <h1 className="mt-6 max-w-3xl font-display text-5xl leading-none text-sand md:text-7xl">
+          Your city’s inventory, delivered through one marketplace.
+        </h1>
+        <p className="mt-5 max-w-2xl text-base leading-7 text-sand/72">
+          Buzz.ai turns neighborhood shops into digital storefronts. Customers browse nearby stock,
+          compare merchants, place orders, and keep local commerce moving faster.
+        </p>
+        <div className="mt-8 flex flex-wrap gap-3">
+          {categories.slice(1, 6).map((category) => (
+            <button
+              key={category}
+              className="button-secondary"
+              onClick={() => setSelectedCategory(category)}
+              type="button"
+            >
+              Explore {category}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-1">
+        <StatCard label="Live city" value={selectedCity} />
+        <StatCard label="Visible shops" value={String(shopsCount)} />
+        <StatCard label="Cart value" value={`Rs. ${cartTotal}`} />
+      </div>
+    </section>
+  );
+}
+
+function StatCard({ label, value }) {
+  return (
+    <div className="panel p-5">
+      <div className="text-xs uppercase tracking-[0.24em] text-sand/45">{label}</div>
+      <div className="mt-3 text-3xl font-semibold text-sand">{value}</div>
+    </div>
+  );
+}
+
 function AuthCard({ authForm, mode, setMode, onChange, onSubmit, loading }) {
   return (
-    <div className="panel p-6">
-      <div className="mb-5 flex items-center justify-between">
+    <div className="panel p-6 md:p-8">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-sand/50">Access</p>
-          <h2 className="mt-2 text-2xl font-semibold text-sand">
-            {mode === "register" ? "Create account" : "Login"}
+          <p className="text-xs uppercase tracking-[0.24em] text-sand/45">Account access</p>
+          <h2 className="mt-2 text-3xl font-semibold text-sand">
+            {mode === "register" ? "Create your marketplace account" : "Sign in to Buzz.ai"}
           </h2>
         </div>
         <button
@@ -399,7 +481,7 @@ function AuthCard({ authForm, mode, setMode, onChange, onSubmit, loading }) {
         </button>
       </div>
 
-      <form className="space-y-3" onSubmit={onSubmit}>
+      <form className="mt-6 grid gap-3 md:grid-cols-2" onSubmit={onSubmit}>
         {mode === "register" ? (
           <>
             <input
@@ -457,59 +539,300 @@ function AuthCard({ authForm, mode, setMode, onChange, onSubmit, loading }) {
           onChange={(event) => onChange({ ...authForm, password: event.target.value })}
         />
 
-        <button className="button-primary w-full" disabled={loading} type="submit">
-          {loading ? "Please wait..." : mode === "register" ? "Create account" : "Login"}
+        <button className="button-primary md:col-span-2" disabled={loading} type="submit">
+          {loading ? "Processing..." : mode === "register" ? "Create account" : "Login"}
         </button>
       </form>
     </div>
   );
 }
 
-function ProfileCard({ user, onLogout }) {
+function AccountStrip({ currentUser }) {
   return (
-    <div className="panel p-6">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-sand/50">Logged in</p>
-          <h2 className="mt-2 text-2xl font-semibold">{user.name}</h2>
-          <p className="mt-1 text-sm text-sand/65">
-            {user.role} • {user.location?.city || "No city"} • {user.email}
-          </p>
-        </div>
-        <button className="button-secondary" onClick={onLogout}>
-          Logout
-        </button>
+    <div className="panel flex flex-col gap-4 px-6 py-5 md:flex-row md:items-center md:justify-between">
+      <div>
+        <div className="text-xs uppercase tracking-[0.24em] text-sand/45">Signed in</div>
+        <h2 className="mt-2 text-3xl font-semibold text-sand">{currentUser.name}</h2>
+        <p className="mt-1 text-sm text-sand/65">
+          {currentUser.role} • {currentUser.location?.city || "No city"} • {currentUser.email}
+        </p>
+      </div>
+      <div className="grid grid-cols-2 gap-3 md:w-72">
+        <QuickMetric label="Role" value={currentUser.role} />
+        <QuickMetric label="City" value={currentUser.location?.city || "Unknown"} />
       </div>
     </div>
   );
 }
 
-function LocationCard({ selectedCity, setSelectedCity }) {
+function QuickMetric({ label, value }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+      <div className="text-xs uppercase tracking-[0.2em] text-sand/45">{label}</div>
+      <div className="mt-2 text-sm font-semibold text-sand">{value}</div>
+    </div>
+  );
+}
+
+function MarketplaceControls({ selectedCity, setSelectedCity, selectedCategory, setSelectedCategory }) {
   return (
     <div className="panel p-6">
-      <p className="text-xs uppercase tracking-[0.2em] text-sand/50">Location filter</p>
-      <h2 className="mt-2 text-2xl font-semibold">Choose your city</h2>
-      <div className="mt-4 flex flex-wrap gap-3">
-        {cities.map((city) => (
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <div className="text-xs uppercase tracking-[0.24em] text-sand/45">Browse by city</div>
+          <div className="mt-3 flex flex-wrap gap-3">
+            {cities.map((city) => (
+              <button
+                key={city}
+                className={city === selectedCity ? "button-primary" : "button-secondary"}
+                onClick={() => setSelectedCity(city)}
+                type="button"
+              >
+                {city}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div>
+          <div className="text-xs uppercase tracking-[0.24em] text-sand/45">Popular categories</div>
+          <div className="mt-3 flex flex-wrap gap-3">
+            {categories.map((category) => (
+              <button
+                key={category}
+                className={category === selectedCategory ? "button-primary" : "button-secondary"}
+                onClick={() => setSelectedCategory(category)}
+                type="button"
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ShopsGrid({ featuredShops, selectedShop, loadProducts }) {
+  return (
+    <section className="panel p-6">
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <div className="text-xs uppercase tracking-[0.24em] text-sand/45">Featured local shops</div>
+          <h2 className="mt-2 text-3xl font-semibold text-sand">Discover stores around you</h2>
+        </div>
+        <div className="chip">{featuredShops.length} visible</div>
+      </div>
+
+      <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {featuredShops.map((shop, index) => (
           <button
-            key={city}
-            className={city === selectedCity ? "button-primary" : "button-secondary"}
-            onClick={() => setSelectedCity(city)}
+            key={shop.id}
+            className={`overflow-hidden rounded-3xl border text-left transition ${
+              selectedShop?.id === shop.id
+                ? "border-coral/70 bg-coral/10"
+                : "border-white/10 bg-white/5 hover:bg-white/10"
+            }`}
+            onClick={() => loadProducts(shop)}
+            type="button"
           >
-            {city}
+            <div className="h-28 bg-[linear-gradient(135deg,rgba(239,111,94,0.35),rgba(125,211,176,0.10))] px-5 py-4">
+              <div className="flex items-center justify-between">
+                <span className="chip">{shop.category}</span>
+                <span className="text-xs uppercase tracking-[0.2em] text-sand/55">
+                  #{String(index + 1).padStart(2, "0")}
+                </span>
+              </div>
+            </div>
+            <div className="space-y-3 p-5">
+              <h3 className="text-xl font-semibold text-sand">{shop.name}</h3>
+              <p className="min-h-16 text-sm leading-6 text-sand/65">
+                {shop.description || "Neighborhood merchant on the Buzz.ai network."}
+              </p>
+              <div className="flex items-center justify-between text-sm text-sand/55">
+                <span>{shop.location?.street || shop.location?.city || "Bhilai"}</span>
+                <span>View products</span>
+              </div>
+            </div>
           </button>
         ))}
       </div>
+    </section>
+  );
+}
+
+function ProductsSection({ selectedShop, products, addToCart, user }) {
+  return (
+    <section className="panel p-6">
+      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div>
+          <div className="text-xs uppercase tracking-[0.24em] text-sand/45">Shop catalog</div>
+          <h2 className="mt-2 text-3xl font-semibold text-sand">{selectedShop.name}</h2>
+          <p className="mt-2 text-sm text-sand/65">
+            {selectedShop.description || "Browse the current catalog for this merchant."}
+          </p>
+        </div>
+        <div className="chip">{products.length} products</div>
+      </div>
+
+      <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {products.map((product) => (
+          <div key={product.id} className="overflow-hidden rounded-3xl border border-white/10 bg-white/5">
+            <div className="h-40 bg-[linear-gradient(135deg,rgba(245,196,107,0.35),rgba(239,111,94,0.12))] p-5">
+              <div className="flex items-start justify-between gap-3">
+                <span className="chip">In stock {product.stock}</span>
+                <span className="text-2xl font-semibold text-gold">Rs. {product.price}</span>
+              </div>
+            </div>
+            <div className="space-y-3 p-5">
+              <h3 className="text-xl font-semibold text-sand">{product.name}</h3>
+              <p className="text-sm leading-6 text-sand/65">
+                {product.description || "Local fast-moving inventory for nearby customers."}
+              </p>
+              {user?.role === "customer" ? (
+                <button className="button-primary w-full" onClick={() => addToCart(product)} type="button">
+                  Add to cart
+                </button>
+              ) : null}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function EmptySelection() {
+  return (
+    <div className="panel p-10 text-center">
+      <div className="mx-auto max-w-lg">
+        <div className="text-xs uppercase tracking-[0.24em] text-sand/45">Catalog preview</div>
+        <h2 className="mt-4 text-3xl font-semibold text-sand">Pick a local shop to view live products</h2>
+        <p className="mt-3 text-sm leading-7 text-sand/65">
+          The importer and the merchant tools populate real catalog cards here. Click any shop above
+          to open its storefront.
+        </p>
+      </div>
     </div>
+  );
+}
+
+function CartCard({ cart, cartTotal, placeOrder, loading }) {
+  return (
+    <div className="panel p-6">
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <div className="text-xs uppercase tracking-[0.24em] text-sand/45">Cart</div>
+          <h2 className="mt-2 text-2xl font-semibold text-sand">Ready to checkout</h2>
+        </div>
+        <div className="chip">{cart.length} items</div>
+      </div>
+
+      <div className="mt-4 space-y-3">
+        {cart.length === 0 ? (
+          <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-6 text-sm text-sand/55">
+            Your cart is empty. Add products from a selected shop.
+          </div>
+        ) : null}
+        {cart.map((item) => (
+          <div key={item.productId} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+            <div className="flex items-center justify-between text-sm text-sand">
+              <span>
+                {item.name} x {item.quantity}
+              </span>
+              <strong>Rs. {item.price * item.quantity}</strong>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-4 rounded-2xl border border-white/10 px-4 py-3 text-sm text-sand">
+        <div className="flex items-center justify-between">
+          <span>Total</span>
+          <strong>Rs. {cartTotal}</strong>
+        </div>
+      </div>
+
+      <button className="button-primary mt-4 w-full" disabled={loading} onClick={placeOrder} type="button">
+        {loading ? "Processing..." : "Place order"}
+      </button>
+    </div>
+  );
+}
+
+function OrdersSection({ orders, isShopkeeper, updateOrderStatus }) {
+  return (
+    <section className="panel p-6">
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <div className="text-xs uppercase tracking-[0.24em] text-sand/45">Orders</div>
+          <h2 className="mt-2 text-3xl font-semibold text-sand">
+            {isShopkeeper ? "Incoming merchant orders" : "Your purchase history"}
+          </h2>
+        </div>
+        <div className="chip">{orders.length} total</div>
+      </div>
+
+      <div className="mt-6 space-y-4">
+        {orders.length === 0 ? (
+          <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-6 text-sm text-sand/55">
+            No orders yet.
+          </div>
+        ) : null}
+        {orders.map((order) => (
+          <div key={order.id} className="rounded-3xl border border-white/10 bg-white/5 p-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h3 className="text-lg font-semibold text-sand">
+                  {order.shopId?.name || "Shop"} • Rs. {order.totalAmount}
+                </h3>
+                <p className="mt-1 text-sm text-sand/60">
+                  {isShopkeeper
+                    ? `Customer: ${order.userId?.name || "Unknown"}`
+                    : `Delivery city: ${order.deliveryCity}`}
+                </p>
+              </div>
+              <div className="chip">{order.status}</div>
+            </div>
+
+            <div className="mt-4 space-y-2 text-sm text-sand/70">
+              {order.items.map((item) => (
+                <div key={`${order.id}-${item.productId}`} className="flex items-center justify-between">
+                  <span>
+                    {item.name} x {item.quantity}
+                  </span>
+                  <span>Rs. {item.price * item.quantity}</span>
+                </div>
+              ))}
+            </div>
+
+            {isShopkeeper ? (
+              <div className="mt-4 flex flex-wrap gap-3">
+                {["pending", "confirmed", "delivered"].map((status) => (
+                  <button
+                    key={status}
+                    className={status === order.status ? "button-primary" : "button-secondary"}
+                    onClick={() => updateOrderStatus(order.id, status)}
+                    type="button"
+                  >
+                    {status}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
 
 function ShopFormCard({ shopForm, onChange, onSubmit, loading }) {
   return (
     <div className="panel p-6">
-      <p className="text-xs uppercase tracking-[0.2em] text-sand/50">Shopkeeper</p>
-      <h2 className="mt-2 text-2xl font-semibold">Create your shop</h2>
-      <form className="mt-4 space-y-3" onSubmit={onSubmit}>
+      <div className="text-xs uppercase tracking-[0.24em] text-sand/45">Merchant onboarding</div>
+      <h2 className="mt-2 text-2xl font-semibold text-sand">Launch a new shop</h2>
+      <form className="mt-5 space-y-3" onSubmit={onSubmit}>
         <input
           className="field"
           placeholder="Shop name"
@@ -521,7 +844,7 @@ function ShopFormCard({ shopForm, onChange, onSubmit, loading }) {
           value={shopForm.category}
           onChange={(event) => onChange({ ...shopForm, category: event.target.value })}
         >
-          {categories.map((category) => (
+          {categories.slice(1).map((category) => (
             <option key={category} value={category}>
               {category}
             </option>
@@ -529,7 +852,7 @@ function ShopFormCard({ shopForm, onChange, onSubmit, loading }) {
         </select>
         <textarea
           className="field min-h-24"
-          placeholder="Short shop description"
+          placeholder="Describe the store"
           value={shopForm.description}
           onChange={(event) => onChange({ ...shopForm, description: event.target.value })}
         />
@@ -551,7 +874,7 @@ function ShopFormCard({ shopForm, onChange, onSubmit, loading }) {
           ))}
         </select>
         <button className="button-primary w-full" disabled={loading} type="submit">
-          Launch shop
+          Create shop
         </button>
       </form>
     </div>
@@ -561,9 +884,9 @@ function ShopFormCard({ shopForm, onChange, onSubmit, loading }) {
 function ProductFormCard({ productForm, onChange, onSubmit, myShops, loading }) {
   return (
     <div className="panel p-6">
-      <p className="text-xs uppercase tracking-[0.2em] text-sand/50">Inventory</p>
-      <h2 className="mt-2 text-2xl font-semibold">Add products</h2>
-      <form className="mt-4 space-y-3" onSubmit={onSubmit}>
+      <div className="text-xs uppercase tracking-[0.24em] text-sand/45">Merchant inventory</div>
+      <h2 className="mt-2 text-2xl font-semibold text-sand">Add a product</h2>
+      <form className="mt-5 space-y-3" onSubmit={onSubmit}>
         <select
           className="field"
           value={productForm.shopId}
@@ -571,7 +894,7 @@ function ProductFormCard({ productForm, onChange, onSubmit, myShops, loading }) 
         >
           <option value="">Select shop</option>
           {myShops.map((shop) => (
-            <option key={shop._id} value={shop._id}>
+            <option key={shop.id} value={shop.id}>
               {shop.name}
             </option>
           ))}
@@ -591,7 +914,7 @@ function ProductFormCard({ productForm, onChange, onSubmit, myShops, loading }) 
         />
         <textarea
           className="field min-h-24"
-          placeholder="Description"
+          placeholder="Product description"
           value={productForm.description}
           onChange={(event) => onChange({ ...productForm, description: event.target.value })}
         />
@@ -604,8 +927,8 @@ function ProductFormCard({ productForm, onChange, onSubmit, myShops, loading }) 
         />
         <input
           className="field"
-          type="file"
           accept="image/*"
+          type="file"
           onChange={(event) => onChange({ ...productForm, image: event.target.files?.[0] || null })}
         />
         <button className="button-primary w-full" disabled={loading} type="submit">
@@ -616,178 +939,15 @@ function ProductFormCard({ productForm, onChange, onSubmit, myShops, loading }) 
   );
 }
 
-function MarketplaceCard({ shops, selectedCity, loadProducts, selectedShop }) {
+function GrowthIdeas() {
   return (
     <div className="panel p-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-sand/50">Marketplace</p>
-          <h2 className="mt-2 text-3xl font-semibold">Nearby shops in {selectedCity}</h2>
-        </div>
-        <span className="chip">{shops.length} shops</span>
-      </div>
-
-      <div className="mt-5 grid gap-4 md:grid-cols-2">
-        {shops.map((shop) => (
-          <button
-            key={shop._id}
-            className={`panel p-5 text-left transition ${
-              selectedShop?._id === shop._id ? "border-coral/70 bg-coral/10" : "hover:bg-white/10"
-            }`}
-            onClick={() => loadProducts(shop)}
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <h3 className="text-xl font-semibold">{shop.name}</h3>
-                <p className="mt-1 text-sm text-sand/60">{shop.category}</p>
-              </div>
-              <span className="chip">{shop.location.city}</span>
-            </div>
-            <p className="mt-4 text-sm leading-6 text-sand/70">
-              {shop.description || "Local inventory for nearby customers."}
-            </p>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ProductsCard({ selectedShop, products, addToCart, user }) {
-  return (
-    <div className="panel p-6">
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-sand/50">Products</p>
-          <h2 className="mt-2 text-3xl font-semibold">{selectedShop.name}</h2>
-        </div>
-        <span className="chip">{products.length} products</span>
-      </div>
-
-      <div className="mt-5 grid gap-4 md:grid-cols-2">
-        {products.map((product) => {
-          const imageUrl = product.imageUrl
-            ? `${api.uploadsBaseUrl}${product.imageUrl}`
-            : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='480' viewBox='0 0 800 480'%3E%3Crect width='800' height='480' fill='%23161b24'/%3E%3Ccircle cx='180' cy='100' r='180' fill='%23ef6f5e' fill-opacity='0.18'/%3E%3Ccircle cx='650' cy='120' r='160' fill='%237dd3b0' fill-opacity='0.16'/%3E%3Ctext x='60' y='250' fill='%23f4efe6' font-size='54' font-family='Arial, sans-serif'%3EBuzz.ai Product%3C/text%3E%3Ctext x='60' y='310' fill='%23f5c46b' font-size='24' font-family='Arial, sans-serif'%3ELocal inventory preview%3C/text%3E%3C/svg%3E";
-
-          return (
-            <div key={product._id} className="overflow-hidden rounded-3xl border border-white/10 bg-white/5">
-              <img alt={product.name} className="h-40 w-full object-cover" src={imageUrl} />
-              <div className="space-y-3 p-5">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <h3 className="text-xl font-semibold">{product.name}</h3>
-                    <p className="mt-1 text-sm text-sand/60">{product.description || "Fresh local stock"}</p>
-                  </div>
-                  <span className="text-lg font-semibold text-gold">Rs. {product.price}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-sand/60">Stock: {product.stock}</span>
-                  {user?.role === "customer" ? (
-                    <button className="button-primary" onClick={() => addToCart(product)}>
-                      Add to cart
-                    </button>
-                  ) : null}
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function CartCard({ cart, cartTotal, placeOrder }) {
-  return (
-    <div className="panel p-6">
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-sand/50">Cart</p>
-          <h2 className="mt-2 text-2xl font-semibold">Ready to order</h2>
-        </div>
-        <span className="chip">{cart.length} items</span>
-      </div>
-
-      <div className="mt-4 space-y-3">
-        {cart.map((item) => (
-          <div key={item.productId} className="flex items-center justify-between rounded-2xl bg-white/5 px-4 py-3 text-sm">
-            <span>
-              {item.name} x {item.quantity}
-            </span>
-            <strong>Rs. {item.price * item.quantity}</strong>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-4 flex items-center justify-between rounded-2xl border border-white/10 px-4 py-3">
-        <span>Total</span>
-        <strong>Rs. {cartTotal}</strong>
-      </div>
-
-      <button className="button-primary mt-4 w-full" onClick={placeOrder}>
-        Place order
-      </button>
-    </div>
-  );
-}
-
-function OrdersCard({ orders, isShopkeeper, updateOrderStatus }) {
-  return (
-    <div className="panel p-6">
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-sand/50">Orders</p>
-          <h2 className="mt-2 text-3xl font-semibold">
-            {isShopkeeper ? "Incoming orders" : "Your orders"}
-          </h2>
-        </div>
-        <span className="chip">{orders.length} total</span>
-      </div>
-
-      <div className="mt-5 space-y-4">
-        {orders.map((order) => (
-          <div key={order._id} className="rounded-3xl border border-white/10 bg-white/5 p-5">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <h3 className="text-lg font-semibold">
-                  {order.shopId?.name || "Shop"} • Rs. {order.totalAmount}
-                </h3>
-                <p className="mt-1 text-sm text-sand/60">
-                  {isShopkeeper
-                    ? `Customer: ${order.userId?.name || "Unknown"}`
-                    : `Delivery city: ${order.deliveryCity}`}
-                </p>
-              </div>
-              <span className="chip">{order.status}</span>
-            </div>
-
-            <div className="mt-4 space-y-2 text-sm text-sand/70">
-              {order.items.map((item) => (
-                <div key={item.productId} className="flex items-center justify-between">
-                  <span>
-                    {item.name} x {item.quantity}
-                  </span>
-                  <span>Rs. {item.price * item.quantity}</span>
-                </div>
-              ))}
-            </div>
-
-            {isShopkeeper ? (
-              <div className="mt-4 flex flex-wrap gap-3">
-                {["pending", "confirmed", "delivered"].map((status) => (
-                  <button
-                    key={status}
-                    className={order.status === status ? "button-primary" : "button-secondary"}
-                    onClick={() => updateOrderStatus(order._id, status)}
-                  >
-                    {status}
-                  </button>
-                ))}
-              </div>
-            ) : null}
-          </div>
-        ))}
+      <div className="text-xs uppercase tracking-[0.24em] text-sand/45">Business roadmap</div>
+      <h2 className="mt-2 text-2xl font-semibold text-sand">What makes this stronger</h2>
+      <div className="mt-5 space-y-3 text-sm leading-6 text-sand/68">
+        <p>Start with one city and own trust, inventory freshness, and repeat ordering.</p>
+        <p>Add merchant analytics, paid storefront boosts, and payments after merchant retention is real.</p>
+        <p>Use local importer data for discovery, then replace with verified merchant onboarding over time.</p>
       </div>
     </div>
   );

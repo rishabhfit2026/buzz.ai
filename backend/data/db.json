@@ -1,6 +1,1829 @@
 {
-  "users": [],
-  "shops": [],
-  "products": [],
+  "users": [
+    {
+      "id": "24d79029-85de-4cb4-a284-bd54d66b5116",
+      "name": "RISHABH KUMAR SINGH",
+      "email": "rajputrishabhinfo@gmail.com",
+      "phone": "07250025503",
+      "password": "$2a$10$ZWTzdJZGzefT5DfzcZUMhO3jjeVKrdTuZbCy8PLLS9WlEP9Dok9vW",
+      "role": "customer",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai"
+      },
+      "createdAt": "2026-04-20T13:36:35.514Z",
+      "updatedAt": "2026-04-20T13:36:35.514Z"
+    },
+    {
+      "id": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Buzz.ai Imports",
+      "email": "imports@buzz.ai",
+      "phone": "",
+      "password": "",
+      "role": "shopkeeper",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai"
+      },
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    }
+  ],
+  "shops": [
+    {
+      "id": "7388efd5-127c-404f-ad11-633c09fee387",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "A-Market",
+      "category": "Grocery",
+      "description": "Local grocery store discovered from OpenStreetMap data in Bhilai.",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.1919358,
+        "longitude": 81.3464464,
+        "street": "",
+        "postcode": "490006"
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "node",
+        "osmId": 2921569681
+      },
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "852e9a36-2a2f-4ea8-84af-fbfc71826371",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Grand Dhillon",
+      "category": "Restaurant",
+      "description": "Local restaurant store discovered from OpenStreetMap data in Bhilai.",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.2007865,
+        "longitude": 81.323755,
+        "street": "",
+        "postcode": ""
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "node",
+        "osmId": 2921571190
+      },
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "996ff6d1-38ce-4280-8244-7fe47048efdb",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Penmen Notebooks And Stationery",
+      "category": "Stationery",
+      "description": "Street: Priyanka Nagar",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.1590615,
+        "longitude": 81.3278,
+        "street": "Priyanka Nagar",
+        "postcode": "490006"
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "node",
+        "osmId": 7081759925
+      },
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "43c13bc6-81a4-42bf-84df-377a17e0c39d",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Shreeji Super Bazar",
+      "category": "Yes",
+      "description": "Street: 96/3, Nehru Nagar Main Rd, Nehru Nagar East, Nehru Nagar, Chhattisgarh 490020 • Phone: 093006 79952",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.2091866,
+        "longitude": 81.3236847,
+        "street": "96/3, Nehru Nagar Main Rd, Nehru Nagar East, Nehru Nagar, Chhattisgarh 490020",
+        "postcode": ""
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "node",
+        "osmId": 8312522791
+      },
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "56083403-b1d2-4d59-a788-fd2da756586d",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Jaika Bakery",
+      "category": "Bakery",
+      "description": "Street: 739ST-29, Smriti Nagar, Chhattisgarh 490020 • Phone: 092292 56027 • Hours: Mo-Su 07:30-22:30",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.2149372,
+        "longitude": 81.3175659,
+        "street": "739ST-29, Smriti Nagar, Chhattisgarh 490020",
+        "postcode": ""
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "node",
+        "osmId": 8312539259
+      },
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "6d7a32cb-2385-4095-be2f-d886bdbce0f3",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Avon Electronics",
+      "category": "Electronics",
+      "description": "Street: SUPELA-KOKHKA ROAD • Phone: +91 9977728687 • Hours: Mo-Su 10:00-21:00",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.2054004,
+        "longitude": 81.3483667,
+        "street": "SUPELA-KOKHKA ROAD",
+        "postcode": "490023"
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "node",
+        "osmId": 9353714240
+      },
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "0c87307b-cdff-4962-8662-a836d3ad2225",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Jyoti Optical Co. Durg",
+      "category": "Optician",
+      "description": "Phone: +919893254545 • Hours: Mo-Sa 09:00-20:00",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.1862105,
+        "longitude": 81.2761792,
+        "street": "",
+        "postcode": "491001"
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "node",
+        "osmId": 9354761461
+      },
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "6eb019a7-6e53-405b-a2ca-28439e926706",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Dashmesh Dhaba",
+      "category": "Restaurant",
+      "description": "Local restaurant store discovered from OpenStreetMap data in Bhilai.",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.2431619,
+        "longitude": 81.4993291,
+        "street": "",
+        "postcode": ""
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "node",
+        "osmId": 9794274112
+      },
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "43e89206-221f-4148-905f-329a2cc4a1da",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "giani's",
+      "category": "Cafe",
+      "description": "Local cafe store discovered from OpenStreetMap data in Bhilai.",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.2180283,
+        "longitude": 81.3322482,
+        "street": "",
+        "postcode": ""
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "node",
+        "osmId": 10180452635
+      },
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "d314d637-c54c-4675-b285-d145ebd562cb",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Med Shop",
+      "category": "Pharmacy",
+      "description": "Local pharmacy store discovered from OpenStreetMap data in Bhilai.",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.2180302,
+        "longitude": 81.33233,
+        "street": "",
+        "postcode": ""
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "node",
+        "osmId": 10180474870
+      },
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "35c99c68-1061-44d9-a157-227ff3d8248c",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Beauty",
+      "category": "Tea",
+      "description": "Local tea store discovered from OpenStreetMap data in Bhilai.",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.2175819,
+        "longitude": 81.3181063,
+        "street": "",
+        "postcode": ""
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "node",
+        "osmId": 10180551967
+      },
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "7f5933a7-a557-46d9-b6b3-d3335a86e4ca",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Vishal Mega Mart",
+      "category": "Grocery",
+      "description": "Local grocery store discovered from OpenStreetMap data in Bhilai.",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.2156919,
+        "longitude": 81.322644,
+        "street": "",
+        "postcode": ""
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "node",
+        "osmId": 10221227102
+      },
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "2daddef4-37b9-4ce7-8182-3201fdbbbac9",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Mahadev Medicals",
+      "category": "Pharmacy",
+      "description": "Hours: 24/7",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.220885,
+        "longitude": 81.3068661,
+        "street": "",
+        "postcode": ""
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "node",
+        "osmId": 10235386331
+      },
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "1ff4db31-9526-49d2-8221-7e7c21f52940",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Jio Smart Point",
+      "category": "Grocery",
+      "description": "Street: Durg Bypass Road",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.21014,
+        "longitude": 81.3158778,
+        "street": "Durg Bypass Road",
+        "postcode": "490020"
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "node",
+        "osmId": 10284198509
+      },
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "bd185e98-7df6-4f1a-abf0-511caf252d69",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Bhadohi Chat Corner",
+      "category": "Restaurant",
+      "description": "Street: Vaishali Nagar Kalibadi near Electricity Office • Phone: +918103730530 • Hours: Mo-Su 16:00-22:00",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.2196344,
+        "longitude": 81.3529651,
+        "street": "Vaishali Nagar Kalibadi near Electricity Office",
+        "postcode": "490023"
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "node",
+        "osmId": 10826379639
+      },
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "8e414886-29b5-433f-8c84-78255de99143",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Oswal General store",
+      "category": "Grocery",
+      "description": "Local grocery store discovered from OpenStreetMap data in Bhilai.",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.2054308,
+        "longitude": 81.3765067,
+        "street": "",
+        "postcode": ""
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "node",
+        "osmId": 11096989756
+      },
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "2978bd4c-08fb-4bd0-b4ed-da297f35a23a",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Juice factory",
+      "category": "Restaurant",
+      "description": "Local restaurant store discovered from OpenStreetMap data in Bhilai.",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.1874052,
+        "longitude": 81.3441108,
+        "street": "",
+        "postcode": ""
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "node",
+        "osmId": 11097000121
+      },
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "46738c83-66c1-438e-a279-c9cc2fb810fb",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Nanhe coffee",
+      "category": "Cafe",
+      "description": "Local cafe store discovered from OpenStreetMap data in Bhilai.",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.1872011,
+        "longitude": 81.3444606,
+        "street": "",
+        "postcode": ""
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "node",
+        "osmId": 11097000122
+      },
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "51b5ce1b-a242-4cef-a858-bff0c2e200e0",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "new nanhe cafe",
+      "category": "Restaurant",
+      "description": "Local restaurant store discovered from OpenStreetMap data in Bhilai.",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.1876983,
+        "longitude": 81.3444751,
+        "street": "",
+        "postcode": ""
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "node",
+        "osmId": 11805016788
+      },
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "6befce9b-ddc6-4f41-a218-1a9c7569ced7",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "chaika adda",
+      "category": "Restaurant",
+      "description": "Local restaurant store discovered from OpenStreetMap data in Bhilai.",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.1874662,
+        "longitude": 81.3444922,
+        "street": "",
+        "postcode": ""
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "node",
+        "osmId": 11805043131
+      },
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "aca6062e-25b3-4177-abd1-b8f207dad392",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Real Momos",
+      "category": "Restaurant",
+      "description": "Street: Smriti Nagar Road",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.2134002,
+        "longitude": 81.3174221,
+        "street": "Smriti Nagar Road",
+        "postcode": ""
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "node",
+        "osmId": 12014332470
+      },
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "53d79358-ecac-495a-aa11-5eaa50c909c7",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Borsi Market",
+      "category": "Marketplace",
+      "description": "Local marketplace store discovered from OpenStreetMap data in Bhilai.",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.1652772,
+        "longitude": 81.3099303,
+        "street": "",
+        "postcode": ""
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "way",
+        "osmId": 305245705
+      },
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "e3023e42-34e2-4e0c-aa4d-6ae1153c591f",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Borsi Market",
+      "category": "Marketplace",
+      "description": "Local marketplace store discovered from OpenStreetMap data in Bhilai.",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.1655326,
+        "longitude": 81.3097538,
+        "street": "",
+        "postcode": ""
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "way",
+        "osmId": 305245746
+      },
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "ae095a2f-11a4-4f5d-8ed4-4e2f79c48c57",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Nidhi Stores",
+      "category": "General",
+      "description": "Street: Borsi",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.1655939,
+        "longitude": 81.3081446,
+        "street": "Borsi",
+        "postcode": "491005"
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "way",
+        "osmId": 305245898
+      },
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "17dad2c6-5a12-44fe-9c38-1223b0b65f0a",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Radha Rani Provisional Stores",
+      "category": "Yes",
+      "description": "Street: Borsi",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.1655338,
+        "longitude": 81.3086689,
+        "street": "Borsi",
+        "postcode": "491005"
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "way",
+        "osmId": 305245971
+      },
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "4035be9e-6702-45bc-acf0-9fffeaa4d2c2",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Shri Sai Cafeteria",
+      "category": "Restaurant",
+      "description": "Local restaurant store discovered from OpenStreetMap data in Bhilai.",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.216673,
+        "longitude": 81.3066618,
+        "street": "",
+        "postcode": ""
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "way",
+        "osmId": 1112668284
+      },
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "b92d63f4-fa2b-45ad-a20d-5c78c7e8a059",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Subham K Mart",
+      "category": "Grocery",
+      "description": "Local grocery store discovered from OpenStreetMap data in Bhilai.",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.219081,
+        "longitude": 81.308514,
+        "street": "",
+        "postcode": ""
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "way",
+        "osmId": 1112695507
+      },
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "76d8663b-353b-4782-9af6-972e1644e970",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "DMart",
+      "category": "Grocery",
+      "description": "Brand: DMart • Hours: Mo-Su 07:00-22:00",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.2147317,
+        "longitude": 81.3036944,
+        "street": "",
+        "postcode": ""
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "way",
+        "osmId": 1112695508
+      },
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "f1240fa3-b721-4de9-812a-a2563b8c025e",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Surya Treasure Island Mall",
+      "category": "Mall",
+      "description": "Hours: PH,Mo-Su 11:00-22:00",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.2186414,
+        "longitude": 81.3228558,
+        "street": "",
+        "postcode": ""
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "way",
+        "osmId": 1112695926
+      },
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "00da8662-3e88-4041-9640-7a3c4acc8762",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Apicure Restaurant",
+      "category": "Restaurant",
+      "description": "Local restaurant store discovered from OpenStreetMap data in Bhilai.",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.2198397,
+        "longitude": 81.3051394,
+        "street": "",
+        "postcode": ""
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "way",
+        "osmId": 1138331403
+      },
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "32d1ea06-8674-47ad-a208-fbefa40e7973",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "Vrindavan",
+      "category": "Restaurant",
+      "description": "Local restaurant store discovered from OpenStreetMap data in Bhilai.",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.1643177,
+        "longitude": 81.2483826,
+        "street": "",
+        "postcode": ""
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "way",
+        "osmId": 1195603893
+      },
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "e35be223-0063-48ff-8962-fdc3220dfd17",
+      "ownerId": "f8791852-bda1-4b27-b71e-8d929a1a5767",
+      "name": "The Marks",
+      "category": "Restaurant",
+      "description": "Local restaurant store discovered from OpenStreetMap data in Bhilai.",
+      "location": {
+        "state": "Chhattisgarh",
+        "city": "Bhilai",
+        "latitude": 21.1463273,
+        "longitude": 81.3356614,
+        "street": "",
+        "postcode": ""
+      },
+      "isActive": true,
+      "source": {
+        "provider": "OpenStreetMap",
+        "osmType": "way",
+        "osmId": 1271188532
+      },
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    }
+  ],
+  "products": [
+    {
+      "id": "1599205c-dbfb-411a-9d47-0fe8d67c70ff",
+      "shopId": "7388efd5-127c-404f-ad11-633c09fee387",
+      "name": "Daily Essentials Combo",
+      "price": 299,
+      "description": "Daily Essentials Combo from A-Market",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "e14b9a47-0b05-4820-a9e1-75eec99eb068",
+      "shopId": "7388efd5-127c-404f-ad11-633c09fee387",
+      "name": "Fresh Fruits Basket",
+      "price": 199,
+      "description": "Fresh Fruits Basket from A-Market",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "e4a88414-3c01-49dd-8b0f-a066d0a7d8b4",
+      "shopId": "7388efd5-127c-404f-ad11-633c09fee387",
+      "name": "Household Value Pack",
+      "price": 449,
+      "description": "Household Value Pack from A-Market",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "db5d7e64-9177-4326-8a0c-eaf3e681c515",
+      "shopId": "852e9a36-2a2f-4ea8-84af-fbfc71826371",
+      "name": "Chef Special Meal",
+      "price": 249,
+      "description": "Chef Special Meal from Grand Dhillon",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "b3284484-ea29-48d2-b19a-5f99129ed8c4",
+      "shopId": "852e9a36-2a2f-4ea8-84af-fbfc71826371",
+      "name": "Family Combo",
+      "price": 499,
+      "description": "Family Combo from Grand Dhillon",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "70f83cd7-1c65-40d3-a127-83d251cd4b98",
+      "shopId": "852e9a36-2a2f-4ea8-84af-fbfc71826371",
+      "name": "Quick Snack Box",
+      "price": 149,
+      "description": "Quick Snack Box from Grand Dhillon",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "a0462b6c-433c-4fa0-99b7-c38d65d79465",
+      "shopId": "996ff6d1-38ce-4280-8244-7fe47048efdb",
+      "name": "Student Starter Kit",
+      "price": 249,
+      "description": "Student Starter Kit from Penmen Notebooks And Stationery",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "3346b655-4ba0-4c5a-b8f0-4cc76c538165",
+      "shopId": "996ff6d1-38ce-4280-8244-7fe47048efdb",
+      "name": "Office Essentials Pack",
+      "price": 299,
+      "description": "Office Essentials Pack from Penmen Notebooks And Stationery",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "a6254e04-ae3f-4c1f-95e8-533b4d6f417f",
+      "shopId": "996ff6d1-38ce-4280-8244-7fe47048efdb",
+      "name": "Notebook Combo",
+      "price": 180,
+      "description": "Notebook Combo from Penmen Notebooks And Stationery",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "d27cb5f7-7152-4301-87fa-1fad67383e7d",
+      "shopId": "43c13bc6-81a4-42bf-84df-377a17e0c39d",
+      "name": "Popular Item",
+      "price": 199,
+      "description": "Popular Item from Shreeji Super Bazar",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "6a0a5e78-f4b7-432a-a56f-00806329f7fa",
+      "shopId": "43c13bc6-81a4-42bf-84df-377a17e0c39d",
+      "name": "Best Seller",
+      "price": 299,
+      "description": "Best Seller from Shreeji Super Bazar",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "b4867d07-db08-4f28-ab38-e36e285f7c46",
+      "shopId": "43c13bc6-81a4-42bf-84df-377a17e0c39d",
+      "name": "Value Combo",
+      "price": 399,
+      "description": "Value Combo from Shreeji Super Bazar",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "ac6f31b8-0ad1-47b2-9494-73da4584e79d",
+      "shopId": "56083403-b1d2-4d59-a788-fd2da756586d",
+      "name": "Fresh Bread Loaf",
+      "price": 60,
+      "description": "Fresh Bread Loaf from Jaika Bakery",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "09829d14-887d-4e51-b3b2-b7f5c460644b",
+      "shopId": "56083403-b1d2-4d59-a788-fd2da756586d",
+      "name": "Tea Time Cookies",
+      "price": 120,
+      "description": "Tea Time Cookies from Jaika Bakery",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "72a1a4d6-be3e-415e-9ad1-7b9765ec1f8c",
+      "shopId": "56083403-b1d2-4d59-a788-fd2da756586d",
+      "name": "Celebration Cake",
+      "price": 550,
+      "description": "Celebration Cake from Jaika Bakery",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "3619f734-714f-4d6c-b95b-e1632b96ade5",
+      "shopId": "6d7a32cb-2385-4095-be2f-d886bdbce0f3",
+      "name": "Mobile Accessory Pack",
+      "price": 399,
+      "description": "Mobile Accessory Pack from Avon Electronics",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "6f3fd4ac-9b6e-458e-a53f-475165c0960a",
+      "shopId": "6d7a32cb-2385-4095-be2f-d886bdbce0f3",
+      "name": "Charging Cable",
+      "price": 199,
+      "description": "Charging Cable from Avon Electronics",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "27048bfa-8bac-47e4-bea7-c97313d2a851",
+      "shopId": "6d7a32cb-2385-4095-be2f-d886bdbce0f3",
+      "name": "Bluetooth Earbuds",
+      "price": 999,
+      "description": "Bluetooth Earbuds from Avon Electronics",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "e538f5ed-c344-46e5-9029-df746145e1b8",
+      "shopId": "0c87307b-cdff-4962-8662-a836d3ad2225",
+      "name": "Popular Item",
+      "price": 199,
+      "description": "Popular Item from Jyoti Optical Co. Durg",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "c7bebb9c-334e-44c7-a02a-78bcbe107168",
+      "shopId": "0c87307b-cdff-4962-8662-a836d3ad2225",
+      "name": "Best Seller",
+      "price": 299,
+      "description": "Best Seller from Jyoti Optical Co. Durg",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "ab45471e-530e-4063-ae9d-5eab76bd45c2",
+      "shopId": "0c87307b-cdff-4962-8662-a836d3ad2225",
+      "name": "Value Combo",
+      "price": 399,
+      "description": "Value Combo from Jyoti Optical Co. Durg",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "32bb0a55-5471-4a22-9248-8a8f4413b088",
+      "shopId": "6eb019a7-6e53-405b-a2ca-28439e926706",
+      "name": "Chef Special Meal",
+      "price": 249,
+      "description": "Chef Special Meal from Dashmesh Dhaba",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "b8844e30-f933-43e5-968c-50b392d9977f",
+      "shopId": "6eb019a7-6e53-405b-a2ca-28439e926706",
+      "name": "Family Combo",
+      "price": 499,
+      "description": "Family Combo from Dashmesh Dhaba",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "db8345ab-a230-425b-98b6-16cfb2bb0e4e",
+      "shopId": "6eb019a7-6e53-405b-a2ca-28439e926706",
+      "name": "Quick Snack Box",
+      "price": 149,
+      "description": "Quick Snack Box from Dashmesh Dhaba",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "84113532-3526-4afc-b499-eadbefae06e4",
+      "shopId": "43e89206-221f-4148-905f-329a2cc4a1da",
+      "name": "Signature Coffee",
+      "price": 140,
+      "description": "Signature Coffee from giani's",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "eae9ea08-48fb-4373-bf9c-61d5c4ac016f",
+      "shopId": "43e89206-221f-4148-905f-329a2cc4a1da",
+      "name": "Cold Brew Bottle",
+      "price": 180,
+      "description": "Cold Brew Bottle from giani's",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "4ca98a03-5331-4171-887f-c9331efafce2",
+      "shopId": "43e89206-221f-4148-905f-329a2cc4a1da",
+      "name": "Cafe Snack Combo",
+      "price": 220,
+      "description": "Cafe Snack Combo from giani's",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "b0198203-0e3b-49a1-a59f-8199a6d19626",
+      "shopId": "d314d637-c54c-4675-b285-d145ebd562cb",
+      "name": "Health Essentials Kit",
+      "price": 249,
+      "description": "Health Essentials Kit from Med Shop",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "c4c71465-1605-49b2-9362-568e119a6e6d",
+      "shopId": "d314d637-c54c-4675-b285-d145ebd562cb",
+      "name": "Personal Care Bundle",
+      "price": 179,
+      "description": "Personal Care Bundle from Med Shop",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "2a66474c-0aa3-483b-ab35-d1463e2148c2",
+      "shopId": "d314d637-c54c-4675-b285-d145ebd562cb",
+      "name": "First Aid Box",
+      "price": 399,
+      "description": "First Aid Box from Med Shop",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "95a04aa4-72dd-47ed-b828-b9ea7e0e51a5",
+      "shopId": "35c99c68-1061-44d9-a157-227ff3d8248c",
+      "name": "Popular Item",
+      "price": 199,
+      "description": "Popular Item from Beauty",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "ef60d0e8-fc48-401c-976d-a6e80628b761",
+      "shopId": "35c99c68-1061-44d9-a157-227ff3d8248c",
+      "name": "Best Seller",
+      "price": 299,
+      "description": "Best Seller from Beauty",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "5843b57b-e605-473d-b978-10cb5128f218",
+      "shopId": "35c99c68-1061-44d9-a157-227ff3d8248c",
+      "name": "Value Combo",
+      "price": 399,
+      "description": "Value Combo from Beauty",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "77557223-bda9-4817-998d-a25fec1d3ab8",
+      "shopId": "7f5933a7-a557-46d9-b6b3-d3335a86e4ca",
+      "name": "Daily Essentials Combo",
+      "price": 299,
+      "description": "Daily Essentials Combo from Vishal Mega Mart",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "921af5a9-6853-47ef-bbf4-e2910d3f9471",
+      "shopId": "7f5933a7-a557-46d9-b6b3-d3335a86e4ca",
+      "name": "Fresh Fruits Basket",
+      "price": 199,
+      "description": "Fresh Fruits Basket from Vishal Mega Mart",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "57fe032e-b143-4b8c-8990-fd0b2d783c31",
+      "shopId": "7f5933a7-a557-46d9-b6b3-d3335a86e4ca",
+      "name": "Household Value Pack",
+      "price": 449,
+      "description": "Household Value Pack from Vishal Mega Mart",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "7f7b8e88-c2be-4e83-903b-d75e2a2f031d",
+      "shopId": "2daddef4-37b9-4ce7-8182-3201fdbbbac9",
+      "name": "Health Essentials Kit",
+      "price": 249,
+      "description": "Health Essentials Kit from Mahadev Medicals",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "6f37d9db-e09e-4c6c-bc68-576dfbbd2b6b",
+      "shopId": "2daddef4-37b9-4ce7-8182-3201fdbbbac9",
+      "name": "Personal Care Bundle",
+      "price": 179,
+      "description": "Personal Care Bundle from Mahadev Medicals",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "9358be04-910b-443d-8621-98fc91b0a431",
+      "shopId": "2daddef4-37b9-4ce7-8182-3201fdbbbac9",
+      "name": "First Aid Box",
+      "price": 399,
+      "description": "First Aid Box from Mahadev Medicals",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "0c76f2b6-49c1-41c8-ae5e-4425d2fe21a0",
+      "shopId": "1ff4db31-9526-49d2-8221-7e7c21f52940",
+      "name": "Daily Essentials Combo",
+      "price": 299,
+      "description": "Daily Essentials Combo from Jio Smart Point",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "b6c8d77c-99aa-4cf5-8721-7723152351de",
+      "shopId": "1ff4db31-9526-49d2-8221-7e7c21f52940",
+      "name": "Fresh Fruits Basket",
+      "price": 199,
+      "description": "Fresh Fruits Basket from Jio Smart Point",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "edc0d3e3-1af1-4029-ae48-039f216bde2e",
+      "shopId": "1ff4db31-9526-49d2-8221-7e7c21f52940",
+      "name": "Household Value Pack",
+      "price": 449,
+      "description": "Household Value Pack from Jio Smart Point",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.737Z",
+      "updatedAt": "2026-04-20T13:48:15.737Z"
+    },
+    {
+      "id": "79231b58-4a99-487d-8e60-a9f9c2cde650",
+      "shopId": "bd185e98-7df6-4f1a-abf0-511caf252d69",
+      "name": "Chef Special Meal",
+      "price": 249,
+      "description": "Chef Special Meal from Bhadohi Chat Corner",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "7bf032ec-abe5-42bd-8de8-b6d12da23a13",
+      "shopId": "bd185e98-7df6-4f1a-abf0-511caf252d69",
+      "name": "Family Combo",
+      "price": 499,
+      "description": "Family Combo from Bhadohi Chat Corner",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "758dea39-00b6-478e-a052-45d1599baaa5",
+      "shopId": "bd185e98-7df6-4f1a-abf0-511caf252d69",
+      "name": "Quick Snack Box",
+      "price": 149,
+      "description": "Quick Snack Box from Bhadohi Chat Corner",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "cff2d2b3-20f3-48de-b65c-79bc75972720",
+      "shopId": "8e414886-29b5-433f-8c84-78255de99143",
+      "name": "Daily Essentials Combo",
+      "price": 299,
+      "description": "Daily Essentials Combo from Oswal General store",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "7182b76a-a000-4d6e-a299-e998ab97176e",
+      "shopId": "8e414886-29b5-433f-8c84-78255de99143",
+      "name": "Fresh Fruits Basket",
+      "price": 199,
+      "description": "Fresh Fruits Basket from Oswal General store",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "d9cfe8bc-9913-48c6-abae-d3d7c9767fe6",
+      "shopId": "8e414886-29b5-433f-8c84-78255de99143",
+      "name": "Household Value Pack",
+      "price": 449,
+      "description": "Household Value Pack from Oswal General store",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "e7eaf47b-91e3-4e7d-9d41-48e44f300dc8",
+      "shopId": "2978bd4c-08fb-4bd0-b4ed-da297f35a23a",
+      "name": "Chef Special Meal",
+      "price": 249,
+      "description": "Chef Special Meal from Juice factory",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "a61c7cb3-f776-4bb4-93bd-18d34bd6b3ac",
+      "shopId": "2978bd4c-08fb-4bd0-b4ed-da297f35a23a",
+      "name": "Family Combo",
+      "price": 499,
+      "description": "Family Combo from Juice factory",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "dd9efe4c-08b1-4285-b3cb-1d6038946e83",
+      "shopId": "2978bd4c-08fb-4bd0-b4ed-da297f35a23a",
+      "name": "Quick Snack Box",
+      "price": 149,
+      "description": "Quick Snack Box from Juice factory",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "4568b6a4-fe04-4aa8-8499-64b39af2bbff",
+      "shopId": "46738c83-66c1-438e-a279-c9cc2fb810fb",
+      "name": "Signature Coffee",
+      "price": 140,
+      "description": "Signature Coffee from Nanhe coffee",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "37d7eda6-ea5c-4af7-b6b5-232d0da388d3",
+      "shopId": "46738c83-66c1-438e-a279-c9cc2fb810fb",
+      "name": "Cold Brew Bottle",
+      "price": 180,
+      "description": "Cold Brew Bottle from Nanhe coffee",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "d203c8e1-5354-4dc6-8f2e-c1f60656a6b3",
+      "shopId": "46738c83-66c1-438e-a279-c9cc2fb810fb",
+      "name": "Cafe Snack Combo",
+      "price": 220,
+      "description": "Cafe Snack Combo from Nanhe coffee",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "fcb360c6-fcd2-49ea-a3da-cd77a9d8317a",
+      "shopId": "51b5ce1b-a242-4cef-a858-bff0c2e200e0",
+      "name": "Chef Special Meal",
+      "price": 249,
+      "description": "Chef Special Meal from new nanhe cafe",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "faa84aca-327c-4083-8b51-d518070a5334",
+      "shopId": "51b5ce1b-a242-4cef-a858-bff0c2e200e0",
+      "name": "Family Combo",
+      "price": 499,
+      "description": "Family Combo from new nanhe cafe",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "e3ddaf41-e125-484a-aaed-8980a1214dc6",
+      "shopId": "51b5ce1b-a242-4cef-a858-bff0c2e200e0",
+      "name": "Quick Snack Box",
+      "price": 149,
+      "description": "Quick Snack Box from new nanhe cafe",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "0402515d-63c6-4cce-9525-fb2f5c77d534",
+      "shopId": "6befce9b-ddc6-4f41-a218-1a9c7569ced7",
+      "name": "Chef Special Meal",
+      "price": 249,
+      "description": "Chef Special Meal from chaika adda",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "2e08cbae-d07d-486c-94ae-442dcf6d98de",
+      "shopId": "6befce9b-ddc6-4f41-a218-1a9c7569ced7",
+      "name": "Family Combo",
+      "price": 499,
+      "description": "Family Combo from chaika adda",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "c8780eed-e202-4619-a7c9-0372906642dd",
+      "shopId": "6befce9b-ddc6-4f41-a218-1a9c7569ced7",
+      "name": "Quick Snack Box",
+      "price": 149,
+      "description": "Quick Snack Box from chaika adda",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "17732a9b-0ebb-464d-a948-73b2f59ce4ac",
+      "shopId": "aca6062e-25b3-4177-abd1-b8f207dad392",
+      "name": "Chef Special Meal",
+      "price": 249,
+      "description": "Chef Special Meal from Real Momos",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "49f54077-6d89-4a9c-b8a7-8b66a9282cf4",
+      "shopId": "aca6062e-25b3-4177-abd1-b8f207dad392",
+      "name": "Family Combo",
+      "price": 499,
+      "description": "Family Combo from Real Momos",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "e0a27312-8a3e-47ba-a156-c1af72bc3374",
+      "shopId": "aca6062e-25b3-4177-abd1-b8f207dad392",
+      "name": "Quick Snack Box",
+      "price": 149,
+      "description": "Quick Snack Box from Real Momos",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "885b70e3-c99f-4555-8283-15d4463edcba",
+      "shopId": "53d79358-ecac-495a-aa11-5eaa50c909c7",
+      "name": "Mixed Local Picks",
+      "price": 299,
+      "description": "Mixed Local Picks from Borsi Market",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "81c03c38-91c1-46f6-8057-3c11ee009900",
+      "shopId": "53d79358-ecac-495a-aa11-5eaa50c909c7",
+      "name": "Family Shopping Basket",
+      "price": 699,
+      "description": "Family Shopping Basket from Borsi Market",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "ee93567e-9b7c-4c0f-954d-9d1fa9c6529a",
+      "shopId": "53d79358-ecac-495a-aa11-5eaa50c909c7",
+      "name": "Weekend Essentials",
+      "price": 399,
+      "description": "Weekend Essentials from Borsi Market",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "d1e701ab-9cbe-4a3f-9762-340150f95a78",
+      "shopId": "e3023e42-34e2-4e0c-aa4d-6ae1153c591f",
+      "name": "Mixed Local Picks",
+      "price": 299,
+      "description": "Mixed Local Picks from Borsi Market",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "c9ef7f82-3c31-453b-ab49-13b6bed8368e",
+      "shopId": "e3023e42-34e2-4e0c-aa4d-6ae1153c591f",
+      "name": "Family Shopping Basket",
+      "price": 699,
+      "description": "Family Shopping Basket from Borsi Market",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "8a255fad-da7a-4fb6-8ddf-f634cf84ad0f",
+      "shopId": "e3023e42-34e2-4e0c-aa4d-6ae1153c591f",
+      "name": "Weekend Essentials",
+      "price": 399,
+      "description": "Weekend Essentials from Borsi Market",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "69fd5032-4768-49db-af7c-0d6b5212b916",
+      "shopId": "ae095a2f-11a4-4f5d-8ed4-4e2f79c48c57",
+      "name": "Popular Item",
+      "price": 199,
+      "description": "Popular Item from Nidhi Stores",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "fbe988d3-7fbc-4375-9217-3cce8ac04e3d",
+      "shopId": "ae095a2f-11a4-4f5d-8ed4-4e2f79c48c57",
+      "name": "Best Seller",
+      "price": 299,
+      "description": "Best Seller from Nidhi Stores",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "bb4a1fd5-17fd-400c-bc2f-4806bbfa0d29",
+      "shopId": "ae095a2f-11a4-4f5d-8ed4-4e2f79c48c57",
+      "name": "Value Combo",
+      "price": 399,
+      "description": "Value Combo from Nidhi Stores",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "668c40ba-edb4-4620-93bd-de8dd13f3d82",
+      "shopId": "17dad2c6-5a12-44fe-9c38-1223b0b65f0a",
+      "name": "Popular Item",
+      "price": 199,
+      "description": "Popular Item from Radha Rani Provisional Stores",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "aabf5a91-8fb3-4c4b-ab6a-7bae1c94f4b5",
+      "shopId": "17dad2c6-5a12-44fe-9c38-1223b0b65f0a",
+      "name": "Best Seller",
+      "price": 299,
+      "description": "Best Seller from Radha Rani Provisional Stores",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "bb5b7eca-7af4-4039-8014-a0e72e707116",
+      "shopId": "17dad2c6-5a12-44fe-9c38-1223b0b65f0a",
+      "name": "Value Combo",
+      "price": 399,
+      "description": "Value Combo from Radha Rani Provisional Stores",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "9e5e1abc-7d0a-4c8f-8378-e9a7f11f0ec3",
+      "shopId": "4035be9e-6702-45bc-acf0-9fffeaa4d2c2",
+      "name": "Chef Special Meal",
+      "price": 249,
+      "description": "Chef Special Meal from Shri Sai Cafeteria",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "c2494fc4-ea59-48ba-a81a-c497f0040055",
+      "shopId": "4035be9e-6702-45bc-acf0-9fffeaa4d2c2",
+      "name": "Family Combo",
+      "price": 499,
+      "description": "Family Combo from Shri Sai Cafeteria",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "66446385-dbce-4c8e-846b-27f7a7ed6460",
+      "shopId": "4035be9e-6702-45bc-acf0-9fffeaa4d2c2",
+      "name": "Quick Snack Box",
+      "price": 149,
+      "description": "Quick Snack Box from Shri Sai Cafeteria",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "db8ef690-fede-4d9c-bbfb-b8c8a6a710c4",
+      "shopId": "b92d63f4-fa2b-45ad-a20d-5c78c7e8a059",
+      "name": "Daily Essentials Combo",
+      "price": 299,
+      "description": "Daily Essentials Combo from Subham K Mart",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "97c84450-80bf-44f8-b6f0-8d1dfdb75120",
+      "shopId": "b92d63f4-fa2b-45ad-a20d-5c78c7e8a059",
+      "name": "Fresh Fruits Basket",
+      "price": 199,
+      "description": "Fresh Fruits Basket from Subham K Mart",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "ece14e24-570f-424e-ab82-d09aeaadd6c5",
+      "shopId": "b92d63f4-fa2b-45ad-a20d-5c78c7e8a059",
+      "name": "Household Value Pack",
+      "price": 449,
+      "description": "Household Value Pack from Subham K Mart",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "9df1a5d1-33d9-4a89-89f1-d6b6950cb273",
+      "shopId": "76d8663b-353b-4782-9af6-972e1644e970",
+      "name": "Daily Essentials Combo",
+      "price": 299,
+      "description": "Daily Essentials Combo from DMart",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "b97333a1-c9ad-4777-8a51-e61a3884d489",
+      "shopId": "76d8663b-353b-4782-9af6-972e1644e970",
+      "name": "Fresh Fruits Basket",
+      "price": 199,
+      "description": "Fresh Fruits Basket from DMart",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "84b9e9c7-70ef-4e1c-bf84-6f9b82894723",
+      "shopId": "76d8663b-353b-4782-9af6-972e1644e970",
+      "name": "Household Value Pack",
+      "price": 449,
+      "description": "Household Value Pack from DMart",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "73b9e5ea-7889-4602-bdac-5a4de6f58fcd",
+      "shopId": "f1240fa3-b721-4de9-812a-a2563b8c025e",
+      "name": "Popular Item",
+      "price": 199,
+      "description": "Popular Item from Surya Treasure Island Mall",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "64e53d52-e9c3-41ad-829f-dbed3ac4a3f1",
+      "shopId": "f1240fa3-b721-4de9-812a-a2563b8c025e",
+      "name": "Best Seller",
+      "price": 299,
+      "description": "Best Seller from Surya Treasure Island Mall",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "3aa2d647-4d71-4c68-9e05-12f1b6626e73",
+      "shopId": "f1240fa3-b721-4de9-812a-a2563b8c025e",
+      "name": "Value Combo",
+      "price": 399,
+      "description": "Value Combo from Surya Treasure Island Mall",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "8ede7099-0d30-4944-99e6-d8aac1b08008",
+      "shopId": "00da8662-3e88-4041-9640-7a3c4acc8762",
+      "name": "Chef Special Meal",
+      "price": 249,
+      "description": "Chef Special Meal from Apicure Restaurant",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "3d09ec4e-3917-4a48-a410-765c1f0dde73",
+      "shopId": "00da8662-3e88-4041-9640-7a3c4acc8762",
+      "name": "Family Combo",
+      "price": 499,
+      "description": "Family Combo from Apicure Restaurant",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "b2152ec5-e8de-4327-b0bc-2bca289088b4",
+      "shopId": "00da8662-3e88-4041-9640-7a3c4acc8762",
+      "name": "Quick Snack Box",
+      "price": 149,
+      "description": "Quick Snack Box from Apicure Restaurant",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "1367c78b-ea08-4ea8-9640-e041aba88e96",
+      "shopId": "32d1ea06-8674-47ad-a208-fbefa40e7973",
+      "name": "Chef Special Meal",
+      "price": 249,
+      "description": "Chef Special Meal from Vrindavan",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "3eb57bc4-4af8-40c0-bf50-0c8374ed13ce",
+      "shopId": "32d1ea06-8674-47ad-a208-fbefa40e7973",
+      "name": "Family Combo",
+      "price": 499,
+      "description": "Family Combo from Vrindavan",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "b911c182-b5b1-465e-940a-985eb386e467",
+      "shopId": "32d1ea06-8674-47ad-a208-fbefa40e7973",
+      "name": "Quick Snack Box",
+      "price": 149,
+      "description": "Quick Snack Box from Vrindavan",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "2e92c03a-1afc-4612-8dd3-2de1f76e5e51",
+      "shopId": "e35be223-0063-48ff-8962-fdc3220dfd17",
+      "name": "Chef Special Meal",
+      "price": 249,
+      "description": "Chef Special Meal from The Marks",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "ecbbedd6-526e-4724-8106-b0f6da114593",
+      "shopId": "e35be223-0063-48ff-8962-fdc3220dfd17",
+      "name": "Family Combo",
+      "price": 499,
+      "description": "Family Combo from The Marks",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    },
+    {
+      "id": "d35d5f93-4b22-4cde-a364-418f6a26e8da",
+      "shopId": "e35be223-0063-48ff-8962-fdc3220dfd17",
+      "name": "Quick Snack Box",
+      "price": 149,
+      "description": "Quick Snack Box from The Marks",
+      "imageUrl": "",
+      "stock": 100,
+      "createdAt": "2026-04-20T13:48:15.738Z",
+      "updatedAt": "2026-04-20T13:48:15.738Z"
+    }
+  ],
   "orders": []
 }
