@@ -41,6 +41,38 @@ const categoryThemes = {
   General: { label: "Local stores", accent: "from-[#f5f5f5] to-[#dedede]" }
 };
 
+const homepageTiles = [
+  { title: "Top Offers", subtitle: "Daily deals", category: "All", badge: "TO" },
+  { title: "Grocery", subtitle: "Daily essentials", category: "Grocery", badge: "GR" },
+  { title: "Restaurants", subtitle: "Meals nearby", category: "Restaurant", badge: "RS" },
+  { title: "Pharmacy", subtitle: "Health stores", category: "Pharmacy", badge: "PH" },
+  { title: "Electronics", subtitle: "Devices and parts", category: "Electronics", badge: "EL" },
+  { title: "Bakery", subtitle: "Fresh baked", category: "Bakery", badge: "BK" },
+  { title: "Fashion", subtitle: "Apparel", category: "Fashion", badge: "FS" },
+  { title: "Books", subtitle: "Local readers", category: "Books", badge: "BO" }
+];
+
+const promoPanels = [
+  {
+    title: "Bhilai Summer Deals",
+    copy: "Browse nearby shops in one marketplace and open seller storefronts instantly.",
+    category: "All",
+    accent: "from-[#0f4dbb] via-[#2874f0] to-[#6fc1ff]"
+  },
+  {
+    title: "Nehru Nagar Picks",
+    copy: "Spot active grocery, pharmacy, and electronics shops from locality-rich address data.",
+    category: "Grocery",
+    accent: "from-[#fff1bd] via-[#ffe082] to-[#ffcb4c]"
+  },
+  {
+    title: "Seller Growth Zone",
+    copy: "Turn local merchants into visible storefronts, not hidden admin records.",
+    category: "Electronics",
+    accent: "from-[#dbeafe] via-[#a9caff] to-[#7aa2ff]"
+  }
+];
+
 const initialAuthForm = {
   name: "",
   email: "",
@@ -224,6 +256,14 @@ export default function App() {
   const spotlightShops = filteredShops.slice(0, 4);
   const marketplaceProducts = products.slice(0, 12);
   const cartTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const topOfferShops = filteredShops.slice(0, 6);
+  const groceryShops = filteredShops.filter((shop) => normalizeText(shop.category).includes("grocery")).slice(0, 6);
+  const electronicsShops = filteredShops
+    .filter((shop) => normalizeText(shop.category).includes("electronics"))
+    .slice(0, 6);
+  const foodShops = filteredShops
+    .filter((shop) => ["restaurant", "cafe", "bakery"].some((entry) => normalizeText(shop.category).includes(entry)))
+    .slice(0, 6);
 
   useEffect(() => {
     if (selectedShop && !filteredShops.some((shop) => shop.id === selectedShop.id)) {
@@ -442,6 +482,10 @@ export default function App() {
           setSelectedCategory={setSelectedCategory}
         />
 
+        <HomepageTiles setSelectedCategory={setSelectedCategory} />
+
+        <PromoStage loadProducts={loadProducts} panels={promoPanels} featuredShops={spotlightShops} />
+
         {feedback ? (
           <div className="mt-4 rounded-[20px] border border-[#cfd9e8] bg-white px-4 py-3 text-sm text-slate-700 shadow-[0_10px_25px_rgba(15,23,42,0.06)]">
             {feedback}
@@ -454,6 +498,34 @@ export default function App() {
           setSelectedLocality={setSelectedLocality}
           visibleLocalities={visibleLocalities}
         />
+
+        <TopDealsSection
+          loadProducts={loadProducts}
+          sectionTitle="Top offers on Buzz.ai"
+          sectionCopy="Merchants that should feel visible on the homepage, not buried in a simple list."
+          shops={topOfferShops}
+        />
+
+        <div className="mt-6 grid gap-6 xl:grid-cols-3">
+          <ShopShelf
+            title="Best of Grocery"
+            subtitle="Daily-needs sellers around Bhilai"
+            shops={groceryShops}
+            loadProducts={loadProducts}
+          />
+          <ShopShelf
+            title="Electronics For You"
+            subtitle="Local electronics and accessory shops"
+            shops={electronicsShops}
+            loadProducts={loadProducts}
+          />
+          <ShopShelf
+            title="Food and Bakery"
+            subtitle="Restaurants, cafes, and baked picks"
+            shops={foodShops}
+            loadProducts={loadProducts}
+          />
+        </div>
 
         <div className="mt-6 grid gap-6 xl:grid-cols-[1.55fr_0.9fr]">
           <section className="space-y-6">
@@ -534,6 +606,154 @@ export default function App() {
         </div>
       </main>
     </div>
+  );
+}
+
+function HomepageTiles({ setSelectedCategory }) {
+  return (
+    <section className="mt-6 rounded-[28px] border border-[#dbe5f2] bg-white px-4 py-5 shadow-[0_18px_50px_rgba(15,23,42,0.06)]">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4 xl:grid-cols-8">
+        {homepageTiles.map((tile) => (
+          <button
+            key={tile.title}
+            className="rounded-[22px] border border-[#e1eaf5] bg-[#fbfdff] px-3 py-4 text-center transition hover:border-[#b7cae5] hover:bg-[#f5f9ff]"
+            onClick={() => setSelectedCategory(tile.category)}
+            type="button"
+          >
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[18px] bg-[linear-gradient(135deg,#ffe351_0%,#ffd56d_100%)] text-sm font-black text-[#1559d6] shadow-[0_10px_25px_rgba(255,204,0,0.2)]">
+              {tile.badge}
+            </div>
+            <div className="mt-3 text-sm font-black text-slate-900">{tile.title}</div>
+            <div className="mt-1 text-xs text-slate-500">{tile.subtitle}</div>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function PromoStage({ panels, featuredShops, loadProducts }) {
+  return (
+    <section className="mt-6 grid gap-4 xl:grid-cols-[1.5fr_0.85fr]">
+      <div className={`overflow-hidden rounded-[32px] bg-gradient-to-r ${panels[0].accent} p-7 text-white shadow-[0_30px_80px_rgba(40,116,240,0.28)]`}>
+        <div className="max-w-2xl">
+          <div className="inline-flex rounded-full border border-white/20 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/80">
+            Marketplace Banner
+          </div>
+          <h2 className="mt-5 font-display text-4xl leading-tight md:text-5xl">{panels[0].title}</h2>
+          <p className="mt-4 text-sm leading-7 text-white/85 md:text-base">{panels[0].copy}</p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            {featuredShops.slice(0, 3).map((shop) => (
+              <button
+                key={shop.id}
+                className="rounded-[18px] bg-white px-4 py-3 text-sm font-semibold text-[#1559d6]"
+                onClick={() => loadProducts(shop)}
+                type="button"
+              >
+                Open {shop.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="grid gap-4">
+        {panels.slice(1).map((panel) => (
+          <button
+            key={panel.title}
+            className={`rounded-[28px] bg-gradient-to-r ${panel.accent} p-6 text-left shadow-[0_20px_60px_rgba(15,23,42,0.12)]`}
+            onClick={() => {
+              const match = featuredShops.find((shop) =>
+                normalizeText(shop.category).includes(normalizeText(panel.category))
+              );
+              if (match) {
+                loadProducts(match);
+              }
+            }}
+            type="button"
+          >
+            <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-700/70">
+              Promo Panel
+            </div>
+            <h3 className="mt-2 text-2xl font-black text-slate-900">{panel.title}</h3>
+            <p className="mt-2 text-sm leading-6 text-slate-700">{panel.copy}</p>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function TopDealsSection({ sectionTitle, sectionCopy, shops, loadProducts }) {
+  return (
+    <section className="mt-6 rounded-[28px] border border-[#dbe5f2] bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.06)]">
+      <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+        <div>
+          <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">
+            Featured strip
+          </div>
+          <h2 className="mt-2 text-3xl font-black text-slate-900">{sectionTitle}</h2>
+          <p className="mt-2 text-sm text-slate-500">{sectionCopy}</p>
+        </div>
+      </div>
+
+      <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-6">
+        {shops.map((shop) => {
+          const theme = getShopTheme(shop.category);
+          return (
+            <button
+              key={shop.id}
+              className="rounded-[24px] border border-[#e1eaf5] bg-white p-4 text-left transition hover:border-[#bdd0ea] hover:bg-[#f8fbff]"
+              onClick={() => loadProducts(shop)}
+              type="button"
+            >
+              <div className={`h-24 rounded-[18px] bg-gradient-to-r ${theme.accent}`} />
+              <div className="mt-4 text-sm font-black text-slate-900">{shop.name}</div>
+              <div className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#1559d6]">
+                {findLocality(shop)}
+              </div>
+              <div className="mt-2 text-xs text-slate-500">{shop.category}</div>
+            </button>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function ShopShelf({ title, subtitle, shops, loadProducts }) {
+  return (
+    <section className="rounded-[28px] border border-[#dbe5f2] bg-white p-5 shadow-[0_18px_50px_rgba(15,23,42,0.06)]">
+      <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">Shop shelf</div>
+      <h3 className="mt-2 text-2xl font-black text-slate-900">{title}</h3>
+      <p className="mt-2 text-sm text-slate-500">{subtitle}</p>
+
+      <div className="mt-5 space-y-3">
+        {shops.length === 0 ? (
+          <div className="rounded-[20px] border border-[#e1eaf5] bg-[#f8fbff] px-4 py-6 text-sm text-slate-500">
+            No shops visible for this category in the current filter.
+          </div>
+        ) : null}
+
+        {shops.map((shop) => (
+          <button
+            key={shop.id}
+            className="flex w-full items-center gap-3 rounded-[20px] border border-[#e1eaf5] bg-[#fbfdff] p-3 text-left transition hover:border-[#bdd0ea] hover:bg-[#f4f8ff]"
+            onClick={() => loadProducts(shop)}
+            type="button"
+          >
+            <div className={`h-16 w-16 shrink-0 rounded-[18px] bg-gradient-to-r ${getShopTheme(shop.category).accent}`} />
+            <div className="min-w-0">
+              <div className="truncate text-sm font-black text-slate-900">{shop.name}</div>
+              <div className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#1559d6]">
+                {findLocality(shop)}
+              </div>
+              <div className="mt-1 truncate text-xs text-slate-500">{shop.category}</div>
+            </div>
+          </button>
+        ))}
+      </div>
+    </section>
   );
 }
 
