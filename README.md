@@ -80,6 +80,7 @@ This codebase is intentionally an MVP and focuses on the part that must work fir
 - shop creation with city and state
 - product creation with image upload
 - city-based marketplace filtering
+- Bhilai-locality filtering for discovered merchants
 - cart and basic order placement
 - shopkeeper order dashboard
 
@@ -201,6 +202,31 @@ VITE_SERVER_URL=http://localhost:5000
 ```
 
 If these are not set, the frontend defaults to local backend URLs.
+
+## Current Frontend Experience
+
+The frontend has been redesigned to feel more like a real marketplace homepage instead of a plain admin-style dashboard.
+
+Current UI highlights:
+
+- Flipkart-inspired header and search-first layout
+- horizontal category browsing
+- Bhilai-first locality filters such as Risali, Nehru Nagar, Vaishali Nagar, Supela, Smriti Nagar, and Durg when merchant address data supports them
+- seller spotlight cards on the homepage
+- storefront-style product browsing for each merchant
+- preserved customer flows for cart and ordering
+- preserved shopkeeper flows for adding shops and products
+
+This is intentionally marketplace-inspired, not a literal feature-for-feature clone of Flipkart.
+
+## Merchant Data Notes
+
+Current merchant discovery in this repository is powered by OpenStreetMap import data for Bhilai and nearby areas.
+
+Important constraint:
+
+- do not scrape Google Maps directly
+- if Google business data is needed later, add a proper Google Places API based importer with a valid API key
 
 ## Quick Start
 

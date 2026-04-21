@@ -1,38 +1,44 @@
-@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-aura text-sand font-sans min-h-screen;
+  :root {
+    color-scheme: light;
   }
 
   * {
-    scrollbar-color: #ef6f5e #161b24;
+    scrollbar-width: thin;
+    scrollbar-color: #a9bfdc #eef4fb;
+  }
+
+  body {
+    @apply min-h-screen bg-[#f4f7fb] font-sans text-slate-900 antialiased;
+    background-image:
+      radial-gradient(circle at top left, rgba(64, 150, 255, 0.08), transparent 26%),
+      linear-gradient(180deg, #f6f9fd 0%, #eff5fb 100%);
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    @apply font-sans;
   }
 }
 
 @layer components {
-  .panel {
-    @apply rounded-3xl border border-white/10 bg-white/5 shadow-panel backdrop-blur;
+  .button-brand {
+    @apply rounded-[18px] bg-[#2874f0] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#1559d6] disabled:cursor-not-allowed disabled:opacity-70;
   }
 
-  .field {
-    @apply w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-sand placeholder:text-sand/40 focus:border-coral focus:outline-none;
+  .button-soft {
+    @apply rounded-[18px] border border-[#d8e3f1] bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-[#bcd0e8] hover:bg-[#f8fbff];
   }
 
-  .button-primary {
-    @apply rounded-2xl bg-coral px-5 py-3 text-sm font-semibold text-white transition hover:brightness-110;
-  }
-
-  .button-secondary {
-    @apply rounded-2xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-sand transition hover:bg-white/10;
-  }
-
-  .chip {
-    @apply rounded-full border border-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-sand/70;
+  .field-light {
+    @apply w-full rounded-[18px] border border-[#d3dfef] bg-[#f8fbff] px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-[#2874f0] focus:bg-white;
   }
 }
-
