@@ -2,8 +2,6 @@
 
 Buzz.ai is a location-based local commerce platform. It helps neighborhood shops create digital storefronts, helps customers discover nearby stores by city, and lets them place orders from local inventory through a single marketplace experience.
 
-![Buzz.ai marketplace screenshot](docs/images/buzz-ai-home.png)
-
 This repository contains the complete MVP codebase:
 
 - `frontend/`: customer and shopkeeper web app built with React, Vite, and Tailwind CSS
@@ -219,6 +217,29 @@ Current UI highlights:
 
 This is intentionally marketplace-inspired, not a literal feature-for-feature clone of Flipkart.
 
+## Current Progress
+
+Current working progress in the repo:
+
+- homepage now renders a Flipkart-inspired marketplace shell instead of the earlier dashboard-style layout
+- live Bhilai shop data is loading from the backend JSON fallback datastore
+- the marketplace currently shows 32 visible Bhilai-area sellers from imported local data
+- locality clustering is working for areas such as Risali, Nehru Nagar, Vaishali Nagar, Supela, Smriti Nagar, and Durg when address data supports it
+- homepage sections now include category browsing, promo banners, featured offers, shop shelves, and seller storefront sections
+- shop cards currently use generated branding badges and seeded visuals where real merchant assets are not yet available
+- backend CORS was updated so the frontend works from both `localhost` and local LAN addresses such as `192.168.x.x`
+
+Current known gap:
+
+- the repo does not yet contain approved real shop logos or storefront photos for all merchants
+- the current imported Bhilai merchants mostly rely on seeded visual branding unless merchant media is uploaded or an approved external photo source is integrated
+
+Next realistic branding steps:
+
+- merchant-uploaded logos and cover images
+- official Google Places photo integration with a valid API key
+- curated local image assets for priority Bhilai merchants
+
 ## Merchant Data Notes
 
 Current merchant discovery in this repository is powered by OpenStreetMap import data for Bhilai and nearby areas.
@@ -227,6 +248,10 @@ Important constraint:
 
 - do not scrape Google Maps directly
 - if Google business data is needed later, add a proper Google Places API based importer with a valid API key
+
+## README Image Note
+
+The older README screenshot reference has been removed because it no longer matches the current homepage design. If you want the exact latest homepage screenshot committed into the repository, add the image file under `docs/images/` and it can be referenced here directly.
 
 ## Quick Start
 
