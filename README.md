@@ -2,6 +2,8 @@
 
 Buzz.ai is a location-based local commerce platform. It helps neighborhood shops create digital storefronts, helps customers discover nearby stores by city, and lets them place orders from local inventory through a single marketplace experience.
 
+![Buzz.ai homepage demo](docs/images/buzz-ai-homepage-demo.gif)
+
 This repository contains the complete MVP codebase:
 
 - `frontend/`: customer and shopkeeper web app built with React, Vite, and Tailwind CSS
@@ -251,7 +253,7 @@ Important constraint:
 
 ## README Image Note
 
-The older README screenshot reference has been removed because it no longer matches the current homepage design. If you want the exact latest homepage screenshot committed into the repository, add the image file under `docs/images/` and it can be referenced here directly.
+The README now embeds a current homepage GIF demo generated from the latest local screencast so the repository preview matches the active marketplace UI more closely.
 
 ## Quick Start
 
