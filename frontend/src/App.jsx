@@ -104,7 +104,18 @@ const initialShopForm = {
   category: "Grocery",
   description: "",
   state: "Chhattisgarh",
-  city: "Bhilai"
+  city: "Bhilai",
+  logo: null,
+  coverImage: null
+};
+
+const initialBrandingForm = {
+  shopId: "",
+  name: "",
+  description: "",
+  category: "",
+  logo: null,
+  coverImage: null
 };
 
 const initialProductForm = {
@@ -236,6 +247,32 @@ function getShopInitials(name) {
   return parts.map((part) => part[0]?.toUpperCase() || "").join("");
 }
 
+function resolveMediaUrl(path) {
+  if (!path) {
+    return "";
+  }
+
+  if (/^https?:\/\//.test(path)) {
+    return path;
+  }
+
+  return `${api.uploadsBaseUrl}${path.startsWith("/") ? path : `/${path}`}`;
+}
+
+function ShopCover({ shop, className }) {
+  if (shop.coverImageUrl) {
+    return (
+      <img
+        alt={`${shop.name} cover`}
+        className={className}
+        src={resolveMediaUrl(shop.coverImageUrl)}
+      />
+    );
+  }
+
+  return <div className={className} />;
+}
+
 function ShopLogo({ shop, size = "md" }) {
   const sizeClass =
     size === "sm"
@@ -252,7 +289,15 @@ function ShopLogo({ shop, size = "md" }) {
       aria-label={`${shop.name} logo`}
       title={shop.name}
     >
-      {getShopInitials(shop.name)}
+      {shop.logoUrl ? (
+        <img
+          alt={`${shop.name} logo`}
+          className="h-full w-full rounded-[18px] object-cover"
+          src={resolveMediaUrl(shop.logoUrl)}
+        />
+      ) : (
+        getShopInitials(shop.name)
+      )}
     </div>
   );
 }
@@ -277,6 +322,7 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [shopForm, setShopForm] = useState(initialShopForm);
   const [productForm, setProductForm] = useState(initialProductForm);
+  const [brandingForm, setBrandingForm] = useState(initialBrandingForm);
   const [myShops, setMyShops] = useState([]);
 
   const currentUser = authState.user;
@@ -405,6 +451,15 @@ export default function App() {
       if (data.length && !productForm.shopId) {
         setProductForm((current) => ({ ...current, shopId: data[0].id }));
       }
+      if (data.length && !brandingForm.shopId) {
+        setBrandingForm((current) => ({
+          ...current,
+          shopId: data[0].id,
+          name: data[0].name || "",
+          description: data[0].description || "",
+          category: data[0].category || ""
+        }));
+      }
     } catch (error) {
       setFeedback(error.message);
     }
@@ -446,7 +501,14 @@ export default function App() {
     setFeedback("");
 
     try {
-      await api.createShop(shopForm, authState.token);
+      const formData = new FormData();
+      Object.entries(shopForm).forEach(([key, value]) => {
+        if (value !== null && value !== "") {
+          formData.append(key, value);
+        }
+      });
+
+      await api.createShop(formData, authState.token);
       setShopForm({ ...initialShopForm, city: selectedCity });
       await loadMyShops();
       await loadMarketplace(selectedCity);
@@ -486,6 +548,48 @@ export default function App() {
       }
 
       setFeedback("Product added to your catalog.");
+    } catch (error) {
+      setFeedback(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdateShopBranding = async (event) => {
+    event.preventDefault();
+    if (!brandingForm.shopId) {
+      setFeedback("Select a shop to update branding.");
+      return;
+    }
+
+    setLoading(true);
+    setFeedback("");
+
+    try {
+      const formData = new FormData();
+      Object.entries(brandingForm).forEach(([key, value]) => {
+        if (key !== "shopId" && value !== null && value !== "") {
+          formData.append(key, value);
+        }
+      });
+
+      const updatedShop = await api.updateShopBranding(brandingForm.shopId, formData, authState.token);
+
+      setBrandingForm((current) => ({
+        ...current,
+        name: updatedShop.name || current.name,
+        description: updatedShop.description || current.description,
+        category: updatedShop.category || current.category,
+        logo: null,
+        coverImage: null
+      }));
+
+      await loadMyShops();
+      await loadMarketplace(selectedCity);
+      if (selectedShop?.id === brandingForm.shopId) {
+        setSelectedShop(updatedShop);
+      }
+      setFeedback("Shop branding updated.");
     } catch (error) {
       setFeedback(error.message);
     } finally {
@@ -728,6 +832,13 @@ export default function App() {
                   onSubmit={handleCreateProduct}
                   productForm={productForm}
                 />
+                <ShopBrandingCard
+                  brandingForm={brandingForm}
+                  loading={loading}
+                  myShops={myShops}
+                  onChange={setBrandingForm}
+                  onSubmit={handleUpdateShopBranding}
+                />
               </>
             ) : null}
 
@@ -875,8 +986,15 @@ function TopDealsSection({ sectionTitle, sectionCopy, shops, loadProducts }) {
               onClick={() => loadProducts(shop)}
               type="button"
             >
-              <div className="flex h-24 items-center justify-center rounded-[18px] bg-[linear-gradient(135deg,#f8fbff_0%,#edf4ff_100%)]">
-                <ShopLogo shop={shop} size="lg" />
+              <div className="relative h-24 overflow-hidden rounded-[18px] bg-[linear-gradient(135deg,#f8fbff_0%,#edf4ff_100%)]">
+                <ShopCover
+                  shop={shop}
+                  className="h-full w-full object-cover"
+                />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(248,251,255,0.12),rgba(237,244,255,0.7))]" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <ShopLogo shop={shop} size="lg" />
+                </div>
               </div>
               <div className="mt-4 text-sm font-black text-slate-900">{shop.name}</div>
               <div className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#1559d6]">
@@ -1135,7 +1253,9 @@ function MerchantSpotlight({ featuredShops, selectedShop, loadProducts }) {
               onClick={() => loadProducts(shop)}
               type="button"
             >
-              <div className={`flex h-28 items-center justify-between rounded-[22px] bg-gradient-to-r ${theme.accent} px-5`}>
+              <div className={`relative flex h-28 items-center justify-between overflow-hidden rounded-[22px] bg-gradient-to-r ${theme.accent} px-5`}>
+                <ShopCover shop={shop} className="absolute inset-0 h-full w-full object-cover opacity-80" />
+                <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.72),rgba(255,255,255,0.18))]" />
                 <ShopLogo shop={shop} size="lg" />
                 <div className="rounded-full bg-white/75 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-700">
                   {shop.category}
@@ -1349,7 +1469,9 @@ function ShopsGrid({ featuredShops, selectedShop, loadProducts }) {
               onClick={() => loadProducts(shop)}
               type="button"
             >
-              <div className={`h-28 bg-gradient-to-r ${theme.accent} p-5`}>
+              <div className={`relative h-28 overflow-hidden bg-gradient-to-r ${theme.accent} p-5`}>
+                <ShopCover shop={shop} className="absolute inset-0 h-full w-full object-cover opacity-75" />
+                <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.62),rgba(255,255,255,0.12))]" />
                 <div className="flex items-center justify-between">
                   <ShopLogo shop={shop} />
                   <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-700">
@@ -1394,6 +1516,22 @@ function ProductsSection({ selectedShop, products, addToCart, user }) {
 
         <div className="rounded-[20px] bg-[#f8fbff] px-4 py-3 text-sm font-semibold text-[#1559d6]">
           {products.length} products loaded
+        </div>
+      </div>
+
+      <div className="mt-6 overflow-hidden rounded-[26px] border border-[#e1eaf5] bg-[linear-gradient(135deg,#f8fbff_0%,#edf4ff_100%)]">
+        <div className="relative h-52">
+          <ShopCover shop={selectedShop} className="h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,23,42,0.08),rgba(15,23,42,0.32))]" />
+          <div className="absolute bottom-5 left-5 flex items-end gap-4">
+            <ShopLogo shop={selectedShop} size="lg" />
+            <div className="rounded-[18px] bg-white/88 px-4 py-3 shadow-[0_10px_25px_rgba(15,23,42,0.08)]">
+              <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">Branding</div>
+              <div className="mt-1 text-sm font-bold text-slate-900">
+                {selectedShop.logoUrl || selectedShop.coverImageUrl ? "Custom media active" : "Using generated marketplace styling"}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1823,6 +1961,98 @@ function ProductFormCard({ productForm, onChange, onSubmit, myShops, loading }) 
         />
         <button className="button-brand w-full" disabled={loading} type="submit">
           Add product
+        </button>
+      </form>
+    </section>
+  );
+}
+
+function ShopBrandingCard({ brandingForm, onChange, onSubmit, myShops, loading }) {
+  const selectedBrandingShop = myShops.find((shop) => shop.id === brandingForm.shopId) || null;
+
+  return (
+    <section className="rounded-[28px] border border-[#dbe5f2] bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.06)]">
+      <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">
+        Shop branding
+      </div>
+      <h2 className="mt-2 text-2xl font-black text-slate-900">Upload logo and cover image</h2>
+
+      {selectedBrandingShop ? (
+        <div className="mt-4 flex items-center gap-3 rounded-[20px] border border-[#e1eaf5] bg-[#f8fbff] p-4">
+          <ShopLogo shop={selectedBrandingShop} size="md" />
+          <div className="min-w-0">
+            <div className="truncate text-sm font-black text-slate-900">{selectedBrandingShop.name}</div>
+            <div className="mt-1 text-xs text-slate-500">
+              {selectedBrandingShop.logoUrl || selectedBrandingShop.coverImageUrl
+                ? "Custom media already uploaded"
+                : "No custom media yet"}
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      <form className="mt-5 space-y-3" onSubmit={onSubmit}>
+        <select
+          className="field-light"
+          value={brandingForm.shopId}
+          onChange={(event) => {
+            const nextShop = myShops.find((shop) => shop.id === event.target.value);
+            onChange({
+              ...brandingForm,
+              shopId: event.target.value,
+              name: nextShop?.name || "",
+              description: nextShop?.description || "",
+              category: nextShop?.category || "",
+              logo: null,
+              coverImage: null
+            });
+          }}
+        >
+          <option value="">Select shop</option>
+          {myShops.map((shop) => (
+            <option key={shop.id} value={shop.id}>
+              {shop.name}
+            </option>
+          ))}
+        </select>
+        <input
+          className="field-light"
+          placeholder="Shop display name"
+          value={brandingForm.name}
+          onChange={(event) => onChange({ ...brandingForm, name: event.target.value })}
+        />
+        <select
+          className="field-light"
+          value={brandingForm.category}
+          onChange={(event) => onChange({ ...brandingForm, category: event.target.value })}
+        >
+          <option value="">Select category</option>
+          {primaryCategories.slice(1).map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
+        <textarea
+          className="field-light min-h-24"
+          placeholder="Shop description"
+          value={brandingForm.description}
+          onChange={(event) => onChange({ ...brandingForm, description: event.target.value })}
+        />
+        <input
+          className="field-light"
+          accept="image/*"
+          type="file"
+          onChange={(event) => onChange({ ...brandingForm, logo: event.target.files?.[0] || null })}
+        />
+        <input
+          className="field-light"
+          accept="image/*"
+          type="file"
+          onChange={(event) => onChange({ ...brandingForm, coverImage: event.target.files?.[0] || null })}
+        />
+        <button className="button-brand w-full" disabled={loading} type="submit">
+          Save branding
         </button>
       </form>
     </section>

@@ -62,14 +62,23 @@ export const api = {
     });
   },
 
-  createShop(payload, token) {
+  createShop(formData, token) {
     return request("/shops", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`
       },
-      body: JSON.stringify(payload)
+      body: formData
+    });
+  },
+
+  updateShopBranding(shopId, formData, token) {
+    return request(`/shops/${shopId}/branding`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      body: formData
     });
   },
 
