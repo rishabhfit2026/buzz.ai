@@ -14,9 +14,39 @@ const uploadsDirectory = path.resolve(__dirname, "../uploads");
 
 const app = express();
 
+const allowedOrigins = new Set([
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  process.env.CLIENT_URL
+].filter(Boolean));
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173"
+    origin(origin, callback) {
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      try {
+        const parsed = new URL(origin);
+        const isLocalViteOrigin =
+          parsed.protocol === "http:" &&
+          parsed.port === "5173" &&
+          (parsed.hostname === "localhost" ||
+            parsed.hostname === "127.0.0.1" ||
+            /^192\.168\.\d+\.\d+$/.test(parsed.hostname) ||
+            /^10\.\d+\.\d+\.\d+$/.test(parsed.hostname) ||
+            /^172\.(1[6-9]|2\d|3[0-1])\.\d+\.\d+$/.test(parsed.hostname));
+
+        if (allowedOrigins.has(origin) || isLocalViteOrigin) {
+          return callback(null, true);
+        }
+      } catch {
+        return callback(new Error("Invalid CORS origin."));
+      }
+
+      return callback(new Error(`CORS blocked for origin: ${origin}`));
+    }
   })
 );
 app.use(express.json());

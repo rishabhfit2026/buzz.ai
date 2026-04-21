@@ -1,6 +1,7 @@
 import express from "express";
 import { store } from "../lib/store.js";
 import { requireAuth, requireRole } from "../middleware/auth.js";
+import { upload } from "../middleware/upload.js";
 
 const router = express.Router();
 
@@ -23,7 +24,15 @@ router.get("/mine", requireAuth, requireRole("shopkeeper"), async (req, res) => 
   }
 });
 
-router.post("/", requireAuth, requireRole("shopkeeper"), async (req, res) => {
+router.post(
+  "/",
+  requireAuth,
+  requireRole("shopkeeper"),
+  upload.fields([
+    { name: "logo", maxCount: 1 },
+    { name: "coverImage", maxCount: 1 }
+  ]),
+  async (req, res) => {
   try {
     const { name, category, description, state, city } = req.body;
 
@@ -36,7 +45,11 @@ router.post("/", requireAuth, requireRole("shopkeeper"), async (req, res) => {
       name,
       category,
       description,
-      location: { state, city }
+      location: { state, city },
+      logoUrl: req.files?.logo?.[0] ? `/uploads/${req.files.logo[0].filename}` : "",
+      coverImageUrl: req.files?.coverImage?.[0]
+        ? `/uploads/${req.files.coverImage[0].filename}`
+        : ""
     });
 
     return res.status(201).json(shop);
@@ -44,6 +57,51 @@ router.post("/", requireAuth, requireRole("shopkeeper"), async (req, res) => {
     return res.status(500).json({ message: "Unable to create shop.", error: error.message });
   }
 });
+
+router.patch(
+  "/:shopId/branding",
+  requireAuth,
+  requireRole("shopkeeper"),
+  upload.fields([
+    { name: "logo", maxCount: 1 },
+    { name: "coverImage", maxCount: 1 }
+  ]),
+  async (req, res) => {
+    try {
+      const shop = store.getShopByOwner(req.params.shopId, req.user.id);
+      if (!shop) {
+        return res.status(404).json({ message: "Shop not found for this owner." });
+      }
+
+      const updates = {};
+
+      if (req.body.name !== undefined) {
+        updates.name = req.body.name;
+      }
+
+      if (req.body.description !== undefined) {
+        updates.description = req.body.description;
+      }
+
+      if (req.body.category !== undefined) {
+        updates.category = req.body.category;
+      }
+
+      if (req.files?.logo?.[0]) {
+        updates.logoUrl = `/uploads/${req.files.logo[0].filename}`;
+      }
+
+      if (req.files?.coverImage?.[0]) {
+        updates.coverImageUrl = `/uploads/${req.files.coverImage[0].filename}`;
+      }
+
+      const updatedShop = store.updateShop(req.params.shopId, updates);
+      return res.json(updatedShop);
+    } catch (error) {
+      return res.status(500).json({ message: "Unable to update shop branding.", error: error.message });
+    }
+  }
+);
 
 router.get("/:shopId/products", async (req, res) => {
   try {

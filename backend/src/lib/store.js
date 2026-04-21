@@ -85,6 +85,25 @@ export const store = {
     return record;
   },
 
+  updateShop(shopId, updates) {
+    const data = readData();
+    const index = data.shops.findIndex((shop) => shop.id === shopId);
+    if (index === -1) {
+      return null;
+    }
+
+    data.shops[index] = withTimestamps(
+      {
+        ...data.shops[index],
+        ...updates
+      },
+      data.shops[index]
+    );
+
+    writeData(data);
+    return data.shops[index];
+  },
+
   getShops({ city, category } = {}) {
     const data = readData();
     return data.shops

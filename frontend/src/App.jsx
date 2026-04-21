@@ -73,6 +73,22 @@ const promoPanels = [
   }
 ];
 
+const demoTrackingOrder = {
+  id: "demo-tracking-order",
+  status: "confirmed",
+  deliveryCity: "Bhilai",
+  totalAmount: 289,
+  shopId: {
+    id: "demo-shop",
+    name: "Buzz Express Mart",
+    category: "Grocery",
+    location: { city: "Bhilai", street: "Civic Center" }
+  },
+  items: [
+    { productId: "demo-item-1", name: "Daily Essentials Combo", price: 289, quantity: 1 }
+  ]
+};
+
 const initialAuthForm = {
   name: "",
   email: "",
@@ -108,12 +124,53 @@ function normalizeText(value) {
     .trim();
 }
 
+function normalizeSearchQuery(value) {
+  const genericTerms = new Set(["seller", "sellers", "shop", "shops", "store", "stores", "market", "marketplace"]);
+
+  return normalizeText(value)
+    .split(" ")
+    .filter((term) => term && !genericTerms.has(term))
+    .join(" ");
+}
+
 function formatCurrency(value) {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",
     maximumFractionDigits: 0
   }).format(Number(value || 0));
+}
+
+function getDeliveryProgress(status) {
+  const progressMap = {
+    pending: 0.22,
+    confirmed: 0.62,
+    delivered: 1
+  };
+
+  return progressMap[status] || 0.12;
+}
+
+function getDeliveryEta(status) {
+  if (status === "pending") {
+    return "Preparing route • rider assignment pending";
+  }
+
+  if (status === "confirmed") {
+    return "On the way • estimated 12-18 mins";
+  }
+
+  return "Delivered • route completed";
+}
+
+function getDeliverySteps(status) {
+  const steps = [
+    { key: "store", label: "Store confirmed", done: true },
+    { key: "route", label: "Rider on route", done: status === "confirmed" || status === "delivered" },
+    { key: "drop", label: "Delivered", done: status === "delivered" }
+  ];
+
+  return steps;
 }
 
 function findLocality(shop) {
@@ -163,6 +220,41 @@ function getShopSummary(shop) {
   }
 
   return pieces.join(" • ");
+}
+
+function getShopInitials(name) {
+  const parts = String(name || "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2);
+
+  if (parts.length === 0) {
+    return "BZ";
+  }
+
+  return parts.map((part) => part[0]?.toUpperCase() || "").join("");
+}
+
+function ShopLogo({ shop, size = "md" }) {
+  const sizeClass =
+    size === "sm"
+      ? "h-12 w-12 text-sm"
+      : size === "lg"
+        ? "h-16 w-16 text-lg"
+        : "h-14 w-14 text-base";
+
+  const theme = getShopTheme(shop.category);
+
+  return (
+    <div
+      className={`flex items-center justify-center rounded-[18px] border border-white/70 bg-gradient-to-r ${theme.accent} ${sizeClass} font-black tracking-[0.08em] text-slate-800 shadow-[0_10px_25px_rgba(15,23,42,0.08)]`}
+      aria-label={`${shop.name} logo`}
+      title={shop.name}
+    >
+      {getShopInitials(shop.name)}
+    </div>
+  );
 }
 
 export default function App() {
@@ -225,9 +317,9 @@ export default function App() {
       const matchesLocality =
         selectedLocality === "All Bhilai" ||
         normalizeText(locality) === normalizeText(selectedLocality);
-      const needle = normalizeText(searchQuery);
+      const needle = normalizeSearchQuery(searchQuery);
       const haystack = normalizeText(
-        `${shop.name} ${shop.category} ${shop.description || ""} ${shop.location?.street || ""} ${locality}`
+        `${shop.name} ${shop.category} ${shop.description || ""} ${shop.location?.street || ""} ${locality} ${shop.ownerId?.name || ""} seller shop store marketplace`
       );
 
       return matchesCategory && matchesLocality && (!needle || haystack.includes(needle));
@@ -264,6 +356,19 @@ export default function App() {
   const foodShops = filteredShops
     .filter((shop) => ["restaurant", "cafe", "bakery"].some((entry) => normalizeText(shop.category).includes(entry)))
     .slice(0, 6);
+  const latestCustomerOrder = !isShopkeeper && orders.length ? orders[0] : null;
+  const liveTrackingPreview =
+    latestCustomerOrder ||
+    (selectedShop
+      ? {
+          id: `preview-${selectedShop.id}`,
+          status: cart.length > 0 ? "confirmed" : "pending",
+          deliveryCity: selectedCity,
+          totalAmount: cartTotal,
+          shopId: selectedShop,
+          items: cart
+        }
+      : demoTrackingOrder);
 
   useEffect(() => {
     if (selectedShop && !filteredShops.some((shop) => shop.id === selectedShop.id)) {
@@ -492,6 +597,17 @@ export default function App() {
           </div>
         ) : null}
 
+        {filteredShops.length === 0 ? (
+          <NoResultsNotice
+            searchQuery={searchQuery}
+            selectedCategory={selectedCategory}
+            selectedLocality={selectedLocality}
+            setSearchQuery={setSearchQuery}
+            setSelectedCategory={setSelectedCategory}
+            setSelectedLocality={setSelectedLocality}
+          />
+        ) : null}
+
         <LocalityRow
           localityCounts={localityCounts}
           selectedLocality={selectedLocality}
@@ -568,6 +684,14 @@ export default function App() {
               <EmptySelection />
             )}
 
+            {!isShopkeeper && liveTrackingPreview ? (
+              <DeliveryRouteShowcase
+                order={liveTrackingPreview}
+                selectedShop={selectedShop}
+                hasActiveOrder={Boolean(latestCustomerOrder)}
+              />
+            ) : null}
+
             {isAuthenticated ? (
               <OrdersSection
                 isShopkeeper={isShopkeeper}
@@ -578,6 +702,13 @@ export default function App() {
           </section>
 
           <aside className="space-y-6">
+            {!isShopkeeper && liveTrackingPreview ? (
+              <DeliverySidebarCard
+                order={liveTrackingPreview}
+                hasActiveOrder={Boolean(latestCustomerOrder)}
+              />
+            ) : null}
+
             {isCustomer ? (
               <CartCard cart={cart} cartTotal={cartTotal} loading={loading} placeOrder={placeOrder} />
             ) : null}
@@ -627,6 +758,44 @@ function HomepageTiles({ setSelectedCategory }) {
             <div className="mt-1 text-xs text-slate-500">{tile.subtitle}</div>
           </button>
         ))}
+      </div>
+    </section>
+  );
+}
+
+function NoResultsNotice({
+  searchQuery,
+  selectedCategory,
+  selectedLocality,
+  setSearchQuery,
+  setSelectedCategory,
+  setSelectedLocality
+}) {
+  return (
+    <section className="mt-4 rounded-[24px] border border-[#dbe5f2] bg-[#fffdf6] px-5 py-4 shadow-[0_10px_25px_rgba(15,23,42,0.05)]">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">
+            No visible results
+          </div>
+          <p className="mt-2 text-sm text-slate-700">
+            No shops match the current filters.
+            {searchQuery ? ` Search is "${searchQuery}".` : ""}
+            {selectedCategory !== "All" ? ` Category is ${selectedCategory}.` : ""}
+            {selectedLocality !== "All Bhilai" ? ` Locality is ${selectedLocality}.` : ""}
+          </p>
+        </div>
+        <button
+          className="button-soft"
+          onClick={() => {
+            setSearchQuery("");
+            setSelectedCategory("All");
+            setSelectedLocality("All Bhilai");
+          }}
+          type="button"
+        >
+          Clear filters
+        </button>
       </div>
     </section>
   );
@@ -699,7 +868,6 @@ function TopDealsSection({ sectionTitle, sectionCopy, shops, loadProducts }) {
 
       <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-6">
         {shops.map((shop) => {
-          const theme = getShopTheme(shop.category);
           return (
             <button
               key={shop.id}
@@ -707,7 +875,9 @@ function TopDealsSection({ sectionTitle, sectionCopy, shops, loadProducts }) {
               onClick={() => loadProducts(shop)}
               type="button"
             >
-              <div className={`h-24 rounded-[18px] bg-gradient-to-r ${theme.accent}`} />
+              <div className="flex h-24 items-center justify-center rounded-[18px] bg-[linear-gradient(135deg,#f8fbff_0%,#edf4ff_100%)]">
+                <ShopLogo shop={shop} size="lg" />
+              </div>
               <div className="mt-4 text-sm font-black text-slate-900">{shop.name}</div>
               <div className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#1559d6]">
                 {findLocality(shop)}
@@ -742,7 +912,7 @@ function ShopShelf({ title, subtitle, shops, loadProducts }) {
             onClick={() => loadProducts(shop)}
             type="button"
           >
-            <div className={`h-16 w-16 shrink-0 rounded-[18px] bg-gradient-to-r ${getShopTheme(shop.category).accent}`} />
+            <ShopLogo shop={shop} size="md" />
             <div className="min-w-0">
               <div className="truncate text-sm font-black text-slate-900">{shop.name}</div>
               <div className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#1559d6]">
@@ -965,12 +1135,14 @@ function MerchantSpotlight({ featuredShops, selectedShop, loadProducts }) {
               onClick={() => loadProducts(shop)}
               type="button"
             >
-              <div className={`h-28 rounded-[22px] bg-gradient-to-r ${theme.accent}`} />
+              <div className={`flex h-28 items-center justify-between rounded-[22px] bg-gradient-to-r ${theme.accent} px-5`}>
+                <ShopLogo shop={shop} size="lg" />
+                <div className="rounded-full bg-white/75 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-700">
+                  {shop.category}
+                </div>
+              </div>
               <div className="mt-4 flex items-start justify-between gap-3">
                 <div>
-                  <div className="rounded-full bg-[#eef4ff] px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#1559d6]">
-                    {shop.category}
-                  </div>
                   <h3 className="mt-3 text-xl font-black text-slate-900">{shop.name}</h3>
                   <p className="mt-2 text-sm text-slate-500">{locality}</p>
                 </div>
@@ -1179,9 +1351,7 @@ function ShopsGrid({ featuredShops, selectedShop, loadProducts }) {
             >
               <div className={`h-28 bg-gradient-to-r ${theme.accent} p-5`}>
                 <div className="flex items-center justify-between">
-                  <span className="rounded-full bg-white/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-700">
-                    {shop.category}
-                  </span>
+                  <ShopLogo shop={shop} />
                   <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-700">
                     {String(index + 1).padStart(2, "0")}
                   </span>
@@ -1373,6 +1543,8 @@ function OrdersSection({ orders, isShopkeeper, updateOrderStatus }) {
               ))}
             </div>
 
+            {!isShopkeeper ? <DeliveryTrackingCard order={order} /> : null}
+
             {isShopkeeper ? (
               <div className="mt-4 flex flex-wrap gap-3">
                 {["pending", "confirmed", "delivered"].map((status) => (
@@ -1391,6 +1563,151 @@ function OrdersSection({ orders, isShopkeeper, updateOrderStatus }) {
         ))}
       </div>
     </section>
+  );
+}
+
+function DeliveryRouteShowcase({ order, selectedShop, hasActiveOrder }) {
+  return (
+    <section className="rounded-[28px] border border-[#dbe5f2] bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.06)]">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">
+            Delivery route
+          </div>
+          <h2 className="mt-2 text-3xl font-black text-slate-900">
+            {hasActiveOrder ? "Live delivery tracking" : "Delivery preview before checkout"}
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            {hasActiveOrder
+              ? "This route card is now surfaced in the main shopping flow so delivery progress is visible without opening order history."
+              : `Once you place an order from ${selectedShop?.name || "this shop"}, this route becomes your live delivery view.`}
+          </p>
+        </div>
+        <div className="rounded-[18px] bg-[#edf4ff] px-4 py-3 text-sm font-semibold text-[#1559d6]">
+          {order.shopId?.name || selectedShop?.name || "Selected shop"} to {order.deliveryCity}
+        </div>
+      </div>
+
+      <DeliveryTrackingCard order={order} compact={false} />
+    </section>
+  );
+}
+
+function DeliverySidebarCard({ order, hasActiveOrder }) {
+  return (
+    <section className="rounded-[28px] border border-[#dbe5f2] bg-white p-5 shadow-[0_18px_50px_rgba(15,23,42,0.06)]">
+      <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">
+        Route status
+      </div>
+      <h3 className="mt-2 text-2xl font-black text-slate-900">
+        {hasActiveOrder ? "Track your order" : "Delivery map preview"}
+      </h3>
+      <p className="mt-2 text-sm text-slate-500">
+        {hasActiveOrder ? getDeliveryEta(order.status) : "Preview how the route card will look after checkout."}
+      </p>
+
+      <div className="mt-4">
+        <DeliveryTrackingCard order={order} compact />
+      </div>
+    </section>
+  );
+}
+
+function DeliveryTrackingCard({ order, compact = false }) {
+  const progress = getDeliveryProgress(order.status);
+  const steps = getDeliverySteps(order.status);
+  const routeX = 48 + progress * 220;
+  const routeY = 88 - progress * 18;
+
+  return (
+    <div className={`${compact ? "" : "mt-5"} rounded-[22px] border border-[#dbe5f2] bg-white p-4 shadow-[0_10px_25px_rgba(15,23,42,0.04)]`}>
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          {!compact ? (
+            <>
+              <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">
+                Live delivery view
+              </div>
+              <h4 className="mt-2 text-lg font-black text-slate-900">Route to {order.deliveryCity}</h4>
+            </>
+          ) : (
+            <div className="text-sm font-black text-slate-900">Route to {order.deliveryCity}</div>
+          )}
+          <p className="mt-1 text-sm text-slate-500">{getDeliveryEta(order.status)}</p>
+        </div>
+        <div className="rounded-[18px] bg-[#edf4ff] px-4 py-3 text-sm font-semibold text-[#1559d6]">
+          {order.shopId?.name || "Store"} to customer drop
+        </div>
+      </div>
+
+      <div className="mt-4 overflow-hidden rounded-[20px] border border-[#e1eaf5] bg-[linear-gradient(180deg,#f8fbff_0%,#eef5ff_100%)] p-4">
+        <svg viewBox="0 0 320 150" className="h-[150px] w-full">
+          <defs>
+            <linearGradient id={`route-${order.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#2874f0" />
+              <stop offset="100%" stopColor="#6fc1ff" />
+            </linearGradient>
+          </defs>
+
+          <path
+            d="M48 112 C92 48, 176 48, 272 88"
+            fill="none"
+            stroke="#d2dff1"
+            strokeWidth="10"
+            strokeLinecap="round"
+            strokeDasharray="10 12"
+          />
+          <path
+            d="M48 112 C92 48, 176 48, 272 88"
+            fill="none"
+            stroke={`url(#route-${order.id})`}
+            strokeWidth="10"
+            strokeLinecap="round"
+            pathLength="1"
+            strokeDasharray={`${progress} 1`}
+          />
+
+          <circle cx="48" cy="112" r="16" fill="#ffe351" />
+          <circle cx="272" cy="88" r="16" fill={order.status === "delivered" ? "#8bd4ac" : "#ffffff"} stroke="#2874f0" strokeWidth="3" />
+          <g transform={`translate(${routeX - 18} ${routeY - 11})`} className="delivery-train">
+            <rect x="0" y="2" width="36" height="18" rx="9" fill="#2874f0" />
+            <path d="M8 6 h14 c4 0 7 3 7 7 v0 H8 z" fill="#dff1ff" />
+            <rect x="22" y="7" width="6" height="5" rx="2.5" fill="#2874f0" opacity="0.75" />
+            <circle cx="10" cy="22" r="3" fill="#0f172a" />
+            <circle cx="26" cy="22" r="3" fill="#0f172a" />
+            <path d="M34 11 l6 2 l-6 2 z" fill="#6fc1ff" />
+            <path d="M-5 8 h5" stroke="#9ec5ff" strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M-8 12 h8" stroke="#9ec5ff" strokeWidth="2" strokeLinecap="round" />
+            <path d="M-4 16 h4" stroke="#9ec5ff" strokeWidth="1.5" strokeLinecap="round" />
+          </g>
+
+          <text x="48" y="116" textAnchor="middle" fontSize="10" fontWeight="700" fill="#1e293b">S</text>
+          <text x="272" y="92" textAnchor="middle" fontSize="10" fontWeight="700" fill="#1e293b">H</text>
+          <text x={routeX} y={routeY - 16} textAnchor="middle" fontSize="9" fontWeight="700" fill="#1559d6">LIVE</text>
+
+          <text x="24" y="140" fontSize="12" fontWeight="700" fill="#1e293b">Shop</text>
+          <text x="236" y="140" fontSize="12" fontWeight="700" fill="#1e293b">Home</text>
+        </svg>
+      </div>
+
+      <div className={`mt-4 grid gap-3 ${compact ? "" : "md:grid-cols-3"}`}>
+        {steps.map((step) => (
+          <div
+            key={step.key}
+            className={`rounded-[18px] border px-4 py-3 ${
+              step.done
+                ? "border-[#bcd6ff] bg-[#edf4ff]"
+                : "border-[#e1eaf5] bg-[#f8fbff]"
+            }`}
+          >
+            <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+              {step.key}
+            </div>
+            <div className="mt-2 text-sm font-bold text-slate-900">{step.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
